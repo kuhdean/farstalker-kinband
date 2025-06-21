@@ -410,20 +410,6 @@ button:hover {
     font-size: 0.85em;
     margin-top: 5px;
 }
-
-/* Reference lists displayed in grid */
-.reference-list {
-    list-style: none;
-    padding-left: 0;
-    margin: 0;
-}
-.reference-list li {
-    padding: 6px 0;
-    border-bottom: 1px solid var(--accent-color-primary);
-    font-size: 0.9em;
-}
-.reference-list li:last-child {
-    border-bottom: none;
 }
 
 /* --- OPERATIVE CARD STYLES (NEW/UPDATED) --- */
