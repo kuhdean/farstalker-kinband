@@ -597,13 +597,13 @@ button:hover {
     transition: width 0.3s ease;
 }
 .health-bar-text {
-    position: absolute; 
-    top: 0; left: 0; right: 0; bottom: 0; 
-    display: flex; align-items: center; justify-content: center; 
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: flex; align-items: center; justify-content: center;
     font-size: 0.8em;
-    font-weight: 600;
-    color: #FFFFFF;
-    text-shadow: none;
+    font-weight: 700;
+    color: #000000;
+    text-shadow: 0 0 3px rgba(255, 255, 255, 0.7), 0 0 1px rgba(255, 255, 255, 0.8);
 }
 
 .card-controls-area {
