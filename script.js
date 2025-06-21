@@ -565,8 +565,24 @@ function usePloy(name, cpCost, buttonEl) {
     }
 }
 
-function showTooltip(keyword, event) {removeTooltip();let definition = "Definition not found.";const foundKey = Object.keys(keywordGlossary).find(k => keyword.toLowerCase().includes(k.split(' ')[0].toLowerCase()));if(foundKey) definition = keywordGlossary[foundKey];const tooltip = document.createElement('div');tooltip.classList.add('tooltip');tooltip.textContent = definition;document.body.appendChild(tooltip);tooltip.style.left = `${event.pageX + 10}px`;tooltip.style.top = `${event.pageY + 10}px`;}
-function removeTooltip() {const existingTooltip = document.querySelector('.tooltip');if (existingTooltip) {existingTooltip.remove();}}
+function showTooltip(keyword, event) {
+    removeTooltip();
+    let definition = 'Definition not found.';
+    const foundKey = Object.keys(keywordGlossary)
+        .find(k => keyword.toLowerCase().includes(k.split(' ')[0].toLowerCase()));
+    if (foundKey) definition = keywordGlossary[foundKey];
+    const tooltip = document.createElement('div');
+    tooltip.classList.add('tooltip');
+    tooltip.textContent = definition;
+    document.body.appendChild(tooltip);
+    tooltip.style.left = `${event.pageX + 10}px`;
+    tooltip.style.top = `${event.pageY + 10}px`;
+}
+
+function removeTooltip() {
+    const existing = document.querySelector('.tooltip');
+    if (existing) existing.remove();
+}
 
 function bindStaticEventListeners() {
     startGameBtn.addEventListener('click', startGame);
