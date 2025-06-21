@@ -359,6 +359,15 @@ button:hover {
     grid-column: 1 / -1;
 }
 
+/* Let reference sections span full width like the equipment section */
+#faction-rules-accordion-container,
+#strategic-ploys-accordion-container,
+#firefight-ploys-accordion-container,
+#faction-equipment-accordion-container,
+#universal-equipment-accordion-container {
+    grid-column: 1 / -1;
+}
+
 #chosen-equipment-card-container {
     display: flex;
     flex-wrap: wrap;
@@ -366,6 +375,88 @@ button:hover {
 }
 
 .chosen-equipment-card {
+    background: var(--card-bg-main);
+    border: 1px solid var(--card-border-color);
+    border-radius: 2px;
+    padding: 10px 15px;
+    flex-basis: calc(33.333% - 10px);
+    min-width: 280px;
+    box-shadow: var(--card-shadow);
+    font-size: 0.85em;
+    line-height: 1.4;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.chosen-equipment-card strong {
+    font-family: 'Inter', sans-serif;
+    color: var(--accent-color-primary);
+    display: block;
+    margin-bottom: 0;
+    font-size: 1.1em;
+}
+
+.equipment-flavor-text {
+    color: var(--text-color-secondary);
+    font-style: italic;
+    font-size: 0.9em;
+    border-bottom: 1px dotted var(--card-border-color);
+    padding-bottom: 8px;
+    margin-top: 4px;
+}
+
+.equipment-rules p {
+    margin: 8px 0 0.5em 0;
+    font-size: 0.9em;
+    line-height: 1.5;
+}
+
+.equipment-rules p:last-child {
+    margin-bottom: 0;
+}
+
+.chosen-equipment-card h4 {
+    font-size: 0.8em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-color-secondary);
+    margin-top: 12px;
+    margin-bottom: 4px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid transparent;
+    background-image: linear-gradient(to right, var(--accent-color-primary), transparent);
+    background-repeat: no-repeat;
+    background-size: 100% 1px;
+    background-position: bottom left;
+}
+
+.equipment-action {
+    font-size: 0.9em;
+}
+
+.equipment-action strong {
+    font-size: 1em;
+    color: var(--text-color-primary);
+}
+
+.equipment-action p {
+    margin-top: 4px;
+    color: var(--text-color-secondary);
+}
+
+.chosen-equipment-card .weapon-table {
+    margin-top: 5px;
+}
+
+/* Reference cards (rules & ploys) styled like chosen equipment */
+.reference-card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.reference-card {
     background: var(--card-section-bg);
     border: 1px solid var(--accent-color-secondary);
     border-radius: 2px;
@@ -375,14 +466,18 @@ button:hover {
     box-shadow: var(--card-shadow);
     font-size: 0.85em;
     line-height: 1.4;
+    display: flex;
+    flex-direction: column;
 }
-.chosen-equipment-card strong {
+
+.reference-card strong {
     font-family: 'Inter', sans-serif;
     color: var(--accent-color-primary);
     display: block;
     margin-bottom: 5px;
 }
-.chosen-equipment-card small {
+
+.reference-card small {
     color: var(--text-color-primary);
 }
 
@@ -445,7 +540,6 @@ button:hover {
 .ploy-text {
     font-size: 0.85em;
     margin-top: 5px;
-}
 }
 
 /* --- OPERATIVE CARD STYLES (NEW/UPDATED) --- */
@@ -543,9 +637,10 @@ button:hover {
     display: grid; /* Use grid for easy alignment */
     grid-template-columns: repeat(4, 1fr); /* Four stats */
     gap: 3px;
-    padding: 4px 0 0 0;
+    padding: 4px 0;
     background-color: transparent;
-    border-bottom: none;
+    border-bottom: 1px solid var(--card-border-light);
+    margin-bottom: 6px;
     text-align: center;
 }
 
@@ -579,6 +674,8 @@ button:hover {
 .card-body {
     padding: 8px;
     flex-grow: 1; /* Allows body to fill remaining space */
+    display: flex;
+    flex-direction: column;
 }
 
 .health-bar {

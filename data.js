@@ -39,16 +39,100 @@ const firefightPloys = [
 ];
 
 const factionEquipment = [
-    { name: 'Piercing Shot', epCost: 1, text: "Once per turning point, when shooting with a Kroot rifle/scattergun/dual pistols, give that weapon Piercing 1. Cannot be used with Toxin Shot.", eligible_weapons: ['Kroot rifle', 'Kroot scattergun', 'Dual Kroot pistols (focused)'] },
-    { name: 'Toxin Shot', epCost: 1, text: "Once per turning point, when shooting with a Kroot rifle/scattergun/dual pistols, give that weapon Lethal 5+ and Stun. Cannot be used with Piercing Shot.", eligible_weapons: ['Kroot rifle', 'Kroot scattergun', 'Dual Kroot pistols (focused)'] },
-    { name: 'Meat', epCost: 1, text: "Once per turning point, when a friendly operative (excluding HOUND) activates while not within control range of enemy operatives, it can regain D3+1 lost wounds.", ineligible_ids: ['hound'] },
-    { name: 'Trophy', epCost: 2, text: "Once per battle, during a friendly operative's activation (excluding HOUND), before or after an action, if not in control range of enemy operatives, gain +1 APL until the end of its activation.", ineligible_ids: ['hound'] }
+    {
+        name: 'Piercing Shot',
+        epCost: 1,
+        flavorText: 'The Kroot make use of many forms of specially crafted ammunition. Bullets tipped with hardened alloys can punch through cover and armour alike.',
+        rules: [
+            "Once per turning point, when a friendly FARSTALKER KINBAND operative is performing the Shoot action and you select a Kroot rifle, Kroot scattergun or dual Kroot pistols (focused), you can use this rule. If you do, until the end of that action, that weapon has the Piercing 1 weapon rule. You cannot use the Piercing Shot and Toxin Shot rule during the same action."
+        ],
+        eligible_weapons: ['Kroot rifle', 'Kroot scattergun', 'Dual Kroot pistols (focused)']
+    },
+    {
+        name: 'Toxin Shot',
+        epCost: 1,
+        flavorText: 'Kroot toxin bullets contain reservoirs of venom extracted from various alien fauna, all of which is incredibly lethal.',
+        rules: [
+            "Once per turning point, when a friendly FARSTALKER KINBAND operative is performing the Shoot action and you select a Kroot rifle, Kroot scattergun or dual Kroot pistols (focused), you can use this rule. If you do, until the end of that action, that weapon has the Lethal 5+ and Stun weapon rules. You cannot use the Piercing Shot and Toxin Shot rule during the same action."
+        ],
+        eligible_weapons: ['Kroot rifle', 'Kroot scattergun', 'Dual Kroot pistols (focused)']
+    },
+    {
+        name: 'Meat',
+        epCost: 1,
+        flavorText: 'Kroot physiologies are far more resilient than their wiry frames suggest. The ingestion of raw meat only serves to bolster their regenerative abilities.',
+        rules: [
+            "Once per turning point, when a friendly FARSTALKER KINBAND operative (excluding HOUND) is activated, if it's not within control range of enemy operatives, you can use this rule. If you do, that friendly operative regains D3+1 lost wounds."
+        ],
+        ineligible_ids: ['hound']
+    },
+    {
+        name: 'Trophy',
+        epCost: 2,
+        flavorText: 'Kroot Farstalkers seek to cut down the most powerful of foes. They will aggressively pursue any enemy they judge worthy and harvest trophies from the corpse.',
+        rules: [
+            "Once per battle, during a friendly FARSTALKER KINBAND operative's activation (excluding HOUND), before or after it performs an action, if it's not within control range of enemy operatives, you can use this rule. If you do, add 1 to that friendly operative's APL stat until the end of its activation."
+        ],
+        ineligible_ids: ['hound']
+    }
 ];
 
+
 const universalEquipment = [
-    { name: 'Portable Barricade', epCost: 2, text: 'Once per battle, after this operative moves, place a barricade within 1\" of it.' },
-    { name: 'Utility Grenades', epCost: 3, text: 'Once per battle, select either a stun or smoke grenade profile and resolve it (Range 6\", Blast 2\").' },
-    { name: 'Climbing Gear', epCost: 1, text: 'This operative does not increase distance for climbing.' }
+    {
+        name: 'Portable Barricade',
+        epCost: 2,
+        flavorText: 'Little more than a suppression shield with armoured feet, these barricades can be hefted and borne forwards to provide mobile cover.',
+        rules: [
+            'A portable barricade is Light, Protective and Portable terrain. Before the battle, you can set it up wholly within your territory, on the killzone floor and more than 2" from other equipment terrain features, access points and Accessible terrain.',
+            'Protective: While an operative is in cover from this terrain feature, improve its Save stat by 1 (to a maximum of 2+).',
+            'Portable: This terrain feature only provides cover while an operative is connected to it and if the shield is intervening (ignore its feet). Operatives connected to the inside of it can perform the following unique action during the battle.'
+        ],
+        uniqueActions: [
+            {
+                name: 'MOVE WITH BARRICADE (1AP)',
+                text: "The same as the Reposition action, except the active operative can move no more than its Move stat minus 2\" and cannot climb, drop, jump or use any kill team’s rules that remove it and set it back up again (e.g. HEARTHKYN SALVAGER FLY, MANDRAKE SHADOW PASSAGE). Before this operative moves, remove the portable barricade it’s connected to. After it moves, set up the portable barricade so it’s connected again, but the portable barricade cannot be set up within 2\" of other equipment terrain features, access points or Accessible terrain. If this is not possible, the portable barricade is not set up again. This action is treated as a Reposition action. An operative cannot perform this action while within control range of an enemy operative, or during the same activation in which it performed the Fall Back or Charge action."
+            }
+        ]
+    },
+    {
+        name: 'Utility Grenades',
+        epCost: 3,
+        flavorText: 'From neuro-suppressant psybombs to smoke-belching chemical charges, grenades of this sort can suppress the enemy and be the difference between life and death.',
+        rules: [
+            'When you select this equipment, select two utility grenades (2 smoke, 2 stun, or 1 smoke and 1 stun). Each selection is a unique action your operatives can perform, but your kill team can only perform that action a total number of times during the battle equal to your selection.'
+        ],
+        uniqueActions: [
+            {
+                name: 'SMOKE GRENADE (1AP)',
+                text: 'Place one of your Smoke Grenade markers within 6" of this operative. It must be visible to this operative, or on Vantage terrain of a terrain feature that’s visible to this operative. The marker creates an area of smoke 1" horizontally and unlimited height vertically from (but not below) it. While an operative is wholly within an area of smoke, it’s obscured to operatives more than 2" from it, and vice versa. In addition, whenever an operative is shooting an enemy operative wholly within an area of smoke, ignore the Piercing weapon rule unless they are within 2" of each other. In the Ready step of the next Strategy phase, roll one D3. Remove that Smoke Grenade marker after a number of activations equal to that D3 have been completed or at the end of the turning point (whichever comes first). An operative cannot perform this action while within control range of an enemy operative, or if you have reached the total number of times your kill team can perform it.'
+            },
+            {
+                name: 'STUN GRENADE (1AP)',
+                text: 'Select one enemy operative visible to and within 6" of this operative. That operative and each other operative within 1" of it takes a stun test. For an operative to take a stun test, roll one D6: on a 3+, subtract 1 from its APL stat until the end of its next activation. An operative cannot perform this action while within control range of an enemy operative, or if you have reached the total number of times your kill team can perform it.'
+            }
+        ]
+    },
+    {
+        name: 'Explosive Grenades',
+        epCost: 3,
+        flavorText: 'A variety of offensive grenades are employed by the forces of the 41st Millennium. These range from simple fragmentation grenades to plasma and gravitic concussion grenades, while even more exotic devices are used to crack open enemy armour.',
+        rules: [
+            'When you select this equipment, select two explosive grenades (2 frag, 2 krak, or 1 frag and 1 krak). Each selection is a ranged weapon your operatives can use, but your kill team can only use that weapon a total number of times during the battle equal to your selection.'
+        ],
+        weaponProfiles: [
+            { name: 'Frag grenade', atk: 4, skill: '4+', dmg: '2/4', rules: 'Range 6", Blast 2", Saturate' },
+            { name: 'Krak grenade', atk: 4, skill: '4+', dmg: '4/5', rules: 'Range 6", Piercing 1, Saturate' }
+        ]
+    },
+    {
+        name: 'Climbing Gear',
+        epCost: 1,
+        flavorText: 'Essential for gaining a vertical advantage in dense terrain.',
+        rules: [
+            'This operative does not increase distance for climbing.'
+        ]
+    }
 ];
 
 const operativesData = [
