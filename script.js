@@ -345,7 +345,7 @@ function renderAllOperativeCards() {
         });
         const contextButtonsHTML = contextActions.map(n => `<button class="context-btn">${n}</button>`).join('');
 
-        const mainContent = `
+        const cardHTML = `
             <div class="card-header">
                 <div class="card-title-area">
                     <h3>${op.name}</h3>
@@ -356,18 +356,18 @@ function renderAllOperativeCards() {
                         <span class="core-stat-label">APL</span>
                         <span class="core-stat-value">${op.stats.apl}${isInjured ? `<span class="stat-modifier">(${modifiedAPLDisplay})</span>` : ''}</span>
                     </div>
-                <div class="core-stat">
-                    <span class="core-stat-label">Move</span>
-                    <span class="core-stat-value">${op.stats.move}${isInjured ? `<span class="stat-modifier">(${modifiedMoveDisplay})</span>` : ''}</span>
-                </div>
-                <div class="core-stat">
-                    <span class="core-stat-label">Save</span>
-                    <span class="core-stat-value">${op.stats.save}</span>
-                </div>
-                <div class="core-stat">
-                    <span class="core-stat-label">Wounds</span>
-                    <span class="core-stat-value">${op.stats.wounds}</span>
-                </div>
+                    <div class="core-stat">
+                        <span class="core-stat-label">Move</span>
+                        <span class="core-stat-value">${op.stats.move}${isInjured ? `<span class="stat-modifier">(${modifiedMoveDisplay})</span>` : ''}</span>
+                    </div>
+                    <div class="core-stat">
+                        <span class="core-stat-label">Save</span>
+                        <span class="core-stat-value">${op.stats.save}</span>
+                    </div>
+                    <div class="core-stat">
+                        <span class="core-stat-label">Wounds</span>
+                        <span class="core-stat-value">${op.stats.wounds}</span>
+                    </div>
                 </div>
             </div>
 
@@ -385,15 +385,11 @@ function renderAllOperativeCards() {
                 ${weaponsHTML ? `<h4>Weapons</h4><table class="weapon-table"><thead><tr><th>Name</th><th>A</th><th>HIT</th><th>D</th><th>Rules</th></tr></thead><tbody>${weaponsHTML}</tbody></table>` : ''}
                 ${abilitiesHTML ? `<h4>Abilities</h4><ul class="ability-list">${abilitiesHTML}</ul>` : ''}
                 ${actionsHTML ? `<h4>Unique Actions</h4><ul class="action-list">${actionsHTML}</ul>` : ''}
+                ${contextButtonsHTML ? `<div class="context-actions">${contextButtonsHTML}</div>` : ''}
             </div>
         `;
 
-        const contextHTML = contextButtonsHTML ? `<h4>Actions</h4>${contextButtonsHTML}` : '';
-
-        card.innerHTML = `
-            <div class="op-card-main-content">${mainContent}</div>
-            <div class="op-card-context-bar" id="contextual-actions-${op.instanceId}">${contextHTML}</div>
-        `;
+        card.innerHTML = cardHTML;
         activeCardsContainer.appendChild(card);
         updateCardVisualState(op.instanceId); // Ensure this is called
     });
