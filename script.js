@@ -2,7 +2,9 @@
 
 // --- GLOBAL STATE ---
 let activeRoster = [];
-let gameState = { turn: 1, cp: 2, vp: 0 };
+let gameState = { turn: 1, cp: 2, vp: 0, totalEp: 10, spentEp: 0 };
+let killTeamEquipment = [];
+const MAX_EQUIPMENT_ITEMS = 4;
 let hasInitiative = true; // Default, will be set by user
 
 // --- DOM ELEMENT SELECTORS ---
@@ -22,26 +24,37 @@ const readyAllBtn = document.getElementById('ready-all-btn');
 const initiativeHolderSpan = document.getElementById('initiative-holder');
 const resetRosterBtn = document.getElementById('reset-roster-btn');
 const equipmentModal = document.getElementById('equipment-modal');
+const availableEquipmentPool = document.getElementById('available-equipment-pool');
+const chosenKillTeamEquipmentList = document.getElementById('chosen-kill-team-equipment');
+const epSpentUI = document.getElementById('ep-spent-ui');
+const equipmentSelectedCount = document.getElementById('equipment-selected-count');
+const chosenEquipmentDisplayArea = document.getElementById('chosen-equipment-display-area');
 
 function loadState() {
     const rosterData = localStorage.getItem('activeRoster');
     const gameData = localStorage.getItem('gameState');
+    const equipData = localStorage.getItem('killTeamEquipment');
     if (rosterData) {
         try { activeRoster = JSON.parse(rosterData); } catch { activeRoster = []; }
     }
     if (gameData) {
-        try { gameState = JSON.parse(gameData); } catch { gameState = { turn: 1, cp: 2, vp: 0 }; }
+        try { gameState = JSON.parse(gameData); } catch { gameState = { turn: 1, cp: 2, vp: 0, totalEp: 10, spentEp: 0 }; }
+    }
+    if (equipData) {
+        try { killTeamEquipment = JSON.parse(equipData); } catch { killTeamEquipment = []; }
     }
 }
 
 function saveState() {
     localStorage.setItem('activeRoster', JSON.stringify(activeRoster));
     localStorage.setItem('gameState', JSON.stringify(gameState));
+    localStorage.setItem('killTeamEquipment', JSON.stringify(killTeamEquipment));
 }
 
 function resetRoster() {
     localStorage.removeItem('activeRoster');
     localStorage.removeItem('gameState');
+    localStorage.removeItem('killTeamEquipment');
     location.reload();
 }
 
@@ -50,6 +63,8 @@ function resetRoster() {
 document.addEventListener('DOMContentLoaded', () => {
     loadState();
     renderOperativePool();
+    renderEquipmentPool();
+    updateEquipmentUI();
     bindStaticEventListeners();
     renderRosterList();
     validateFullRoster();
@@ -57,6 +72,55 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // --- ROSTER BUILDER LOGIC ---
 function renderOperativePool() {poolContainer.innerHTML = '';operativesData.forEach(opData => {const button = document.createElement('button');button.classList.add('operative-pool-button');button.textContent = `${opData.name} ${opData.isLeader ? '(Leader)' : ''}`;button.dataset.id = opData.id;button.addEventListener('click', () => addOperativeToRoster(opData.id));poolContainer.appendChild(button);});}
+
+function renderEquipmentPool() {
+    if (!availableEquipmentPool) return;
+    availableEquipmentPool.innerHTML = '';
+    const allEquip = [...factionEquipment, ...universalEquipment];
+    allEquip.forEach(eq => {
+        const card = document.createElement('div');
+        card.classList.add('equipment-card');
+        const inRoster = killTeamEquipment.some(e => e.name === eq.name);
+        const btn = document.createElement('button');
+        btn.textContent = inRoster ? 'Remove' : 'Add';
+        btn.disabled = !inRoster && (killTeamEquipment.length >= MAX_EQUIPMENT_ITEMS || gameState.spentEp + eq.epCost > gameState.totalEp);
+        btn.addEventListener('click', () => {
+            if (inRoster) removeKillTeamEquipment(eq.name); else addKillTeamEquipment(eq.name);
+        });
+        card.innerHTML = `<strong>${eq.name}</strong> (${eq.epCost}EP)<div><small>${parseKeywords(eq.text)}</small></div>`;
+        card.appendChild(btn);
+        availableEquipmentPool.appendChild(card);
+    });
+}
+
+function updateEquipmentUI() {
+    epSpentUI.textContent = gameState.spentEp;
+    equipmentSelectedCount.textContent = killTeamEquipment.length;
+    chosenKillTeamEquipmentList.innerHTML = killTeamEquipment.map(eq => `<li>${eq.name}</li>`).join('');
+    renderEquipmentPool();
+    renderChosenEquipmentCards();
+}
+
+function addKillTeamEquipment(name) {
+    const item = [...factionEquipment, ...universalEquipment].find(eq => eq.name === name);
+    if (!item) return;
+    if (killTeamEquipment.length >= MAX_EQUIPMENT_ITEMS) return;
+    if (gameState.spentEp + item.epCost > gameState.totalEp) return;
+    if (killTeamEquipment.some(eq => eq.name === name)) return;
+    killTeamEquipment.push(item);
+    gameState.spentEp += item.epCost;
+    updateEquipmentUI();
+    saveState();
+}
+
+function removeKillTeamEquipment(name) {
+    const index = killTeamEquipment.findIndex(eq => eq.name === name);
+    if (index === -1) return;
+    const [removed] = killTeamEquipment.splice(index, 1);
+    gameState.spentEp = Math.max(0, gameState.spentEp - removed.epCost);
+    updateEquipmentUI();
+    saveState();
+}
 
 function showValidationMessage(message, isValid) {
     validationMessage.textContent = message;
@@ -189,8 +253,9 @@ function validateRosterAddition(opData) {
 function validateFullRoster() {
     const hasLeader = activeRoster.some(op => op.isLeader);
     const isFull = activeRoster.length === 12;
+    const eqValid = gameState.spentEp <= gameState.totalEp && killTeamEquipment.length <= MAX_EQUIPMENT_ITEMS;
 
-    if (hasLeader && isFull) {
+    if (hasLeader && isFull && eqValid) {
         startGameBtn.disabled = false;
         showValidationMessage('Roster is valid. Ready to start!', true);
     } else {
@@ -198,6 +263,7 @@ function validateFullRoster() {
         let message = "Roster requires: ";
         if (!hasLeader) message += "1 Leader. ";
         if (!isFull) message += `${12 - activeRoster.length} more operatives.`;
+        if (!eqValid) message += " Check equipment selection.";
         showValidationMessage(message.trim(), false);
     }
 }
@@ -218,6 +284,7 @@ function renderGameView() {
     renderDashboard();
     renderReferencePanel();
     renderAllOperativeCards();
+    renderChosenEquipmentCards();
 }
 
 function renderDashboard() {
@@ -228,8 +295,13 @@ function renderDashboard() {
 }
 
 function renderReferencePanel() {
-    const createAccordion = (title, items) => {
-        const listItems = items.map(item => `<li><strong>${item.name} ${item.cp ? `(${item.cp}CP)` : ''}:</strong> ${item.text}</li>`).join('');
+    const createAccordion = (title, items, isPloy) => {
+        const listItems = items.map(item => {
+            if (isPloy) {
+                return `<li><button class="ploy-button" data-ploy-name="${item.name}" data-cp-cost="${item.cp}">${item.name} (${item.cp}CP)</button><div class="ploy-text">${parseKeywords(item.text)}</div></li>`;
+            }
+            return `<li><strong>${item.name}${item.cp ? ` (${item.cp}CP)` : ''}:</strong> ${parseKeywords(item.text)}</li>`;
+        }).join('');
         return `
             <div>
                 <button class="accordion">${title}</button>
@@ -237,8 +309,8 @@ function renderReferencePanel() {
             </div>`;
     };
     referencePanel.innerHTML = createAccordion('Faction Rules', factionRules) +
-                               createAccordion('Strategic Ploys', strategicPloys) +
-                               createAccordion('Firefight Ploys', firefightPloys) +
+                               createAccordion('Strategic Ploys', strategicPloys, true) +
+                               createAccordion('Firefight Ploys', firefightPloys, true) +
                                createAccordion('Faction Equipment', factionEquipment);
 
     document.querySelectorAll('.accordion').forEach(button => {
@@ -247,6 +319,17 @@ function renderReferencePanel() {
             const content = this.nextElementSibling;
             content.style.maxHeight = content.style.maxHeight ? null : content.scrollHeight + "px";
         });
+    });
+}
+
+function renderChosenEquipmentCards() {
+    if (!chosenEquipmentDisplayArea) return;
+    chosenEquipmentDisplayArea.innerHTML = '';
+    killTeamEquipment.forEach(eq => {
+        const div = document.createElement('div');
+        div.classList.add('chosen-equipment-card');
+        div.innerHTML = `<strong>${eq.name}</strong> (${eq.epCost}EP)<div><small>${parseKeywords(eq.text)}</small></div>`;
+        chosenEquipmentDisplayArea.appendChild(div);
     });
 }
 
@@ -452,6 +535,17 @@ function modifyStateValue(key, amount) {
     saveState();
 }
 
+function usePloy(name, cpCost, buttonEl) {
+    if (gameState.cp < cpCost) return;
+    gameState.cp -= cpCost;
+    renderDashboard();
+    saveState();
+    if (buttonEl) {
+        buttonEl.disabled = true;
+        setTimeout(() => { buttonEl.disabled = false; }, 500);
+    }
+}
+
 function showTooltip(keyword, event) {removeTooltip();let definition = "Definition not found.";const foundKey = Object.keys(keywordGlossary).find(k => keyword.toLowerCase().includes(k.split(' ')[0].toLowerCase()));if(foundKey) definition = keywordGlossary[foundKey];const tooltip = document.createElement('div');tooltip.classList.add('tooltip');tooltip.textContent = definition;document.body.appendChild(tooltip);tooltip.style.left = `${event.pageX + 10}px`;tooltip.style.top = `${event.pageY + 10}px`;}
 function removeTooltip() {const existingTooltip = document.querySelector('.tooltip');if (existingTooltip) {existingTooltip.remove();}}
 
@@ -471,6 +565,7 @@ function bindStaticEventListeners() {
         else if (target.matches('.add-eq-btn')) addEquipmentToOperative(target.dataset.id, target.dataset.eq);
         else if (target.matches('.remove-eq-btn')) removeEquipmentFromOperative(target.dataset.id, target.dataset.eq);
         else if (target.matches('.close-modal')) closeEquipmentModal();
+        else if (target.matches('.ploy-button')) usePloy(target.dataset.ployName, parseInt(target.dataset.cpCost), target);
         else if (target.matches('.keyword')) showTooltip(target.textContent, e);
         else if (!target.closest('.keyword')) removeTooltip();
     });
