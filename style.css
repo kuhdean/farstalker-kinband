@@ -481,6 +481,38 @@ button:hover {
     color: var(--text-color-primary);
 }
 
+/* Reference cards (rules & ploys) styled like chosen equipment */
+.reference-card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.reference-card {
+    background: var(--card-section-bg);
+    border: 1px solid var(--accent-color-secondary);
+    border-radius: 2px;
+    padding: 10px;
+    flex-basis: calc(33.333% - 10px);
+    min-width: 200px;
+    box-shadow: var(--card-shadow);
+    font-size: 0.85em;
+    line-height: 1.4;
+    display: flex;
+    flex-direction: column;
+}
+
+.reference-card strong {
+    font-family: 'Inter', sans-serif;
+    color: var(--accent-color-primary);
+    display: block;
+    margin-bottom: 5px;
+}
+
+.reference-card small {
+    color: var(--text-color-primary);
+}
+
 /* --- REFERENCE PANEL (ACCORDION) --- */
 #reference-panel { margin-bottom: 20px; }
 .accordion {

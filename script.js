@@ -276,8 +276,15 @@ function renderReferenceAccordions() {
     factionRulesAccordionContainer.innerHTML = makeSection('Faction Rules', factionRules);
     strategicPloysAccordionContainer.innerHTML = makeSection('Strategic Ploys', strategicPloys, true);
     firefightPloysAccordionContainer.innerHTML = makeSection('Firefight Ploys', firefightPloys, true);
+    codex/overhaul-operative-card-layout-and-styles
     // Equipment reference sections are deprecated; only the selected
     // equipment datacards are shown in the tracker.
+    const selectedFactionEq = killTeamEquipment.filter(eq => factionEquipment.some(f => f.name === eq.name));
+    const selectedUniversalEq = killTeamEquipment.filter(eq => universalEquipment.some(u => u.name === eq.name));
+
+    factionEquipmentAccordionContainer.innerHTML = makeSection('Faction Equipment', selectedFactionEq);
+    universalEquipmentAccordionContainer.innerHTML = makeSection('Universal Equipment', selectedUniversalEq);
+     ui-redesign
 }
 
 function renderChosenEquipmentCards() {

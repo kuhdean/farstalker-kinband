@@ -134,7 +134,6 @@ const universalEquipment = [
         ]
     }
 ];
-
 const operativesData = [
     {
         id: 'kill_broker',
