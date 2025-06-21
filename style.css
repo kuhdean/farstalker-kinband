@@ -89,8 +89,12 @@ button { cursor: pointer; border-radius: 5px; border: none; padding: 10px 15px; 
 #roster-validation-message.error { color: var(--error-text-color); background-color: var(--error-message-color); padding: 5px; border-radius: 3px;}
 #roster-validation-message.valid { color: var(--valid-message-color); }
 
-.operative-pool-button { display: block; width: 100%; text-align: left; padding: 10px; margin-bottom: 5px; border: 1px solid var(--border-color); background-color: #f9f9f9; }
-.operative-pool-button:hover { background-color: #ecf0f1; }
+#master-selection-grid-area { flex: 1; background: var(--card-bg-main); padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+
+.selection-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+
+.operative-tile, .equipment-tile { border: 1px solid var(--card-border-light); background: var(--card-section-bg); border-radius: 4px; padding: 10px; cursor: pointer; }
+.operative-tile.disabled, .equipment-tile.disabled { opacity: 0.5; pointer-events: none; }
 .roster-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; background-color: #f9f9f9; border: 1px solid var(--border-color); margin-bottom: 5px; }
 .remove-op-btn { color: var(--injured-color-border); font-weight: bold; background: none; font-size: 1.2em; }
 .equip-op-btn { margin-right: 8px; }
@@ -432,14 +436,34 @@ button { cursor: pointer; border-radius: 5px; border: none; padding: 10px 15px; 
 }
 .equipment-card button { margin-top: 5px; }
 
-#chosen-kill-team-equipment { list-style: none; padding-left: 0; }
-#chosen-kill-team-equipment li { margin-bottom: 5px; }
+#chosen-kill-team-equipment-list { list-style: none; padding-left: 0; }
+#chosen-kill-team-equipment-list li { margin-bottom: 5px; }
 
 #chosen-equipment-display-area {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
     margin-bottom: 10px;
+}
+
+#game-tracker-main-content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.grid-item {
+    background: var(--card-bg-main);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+#chosen-equipment-card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .chosen-equipment-card {

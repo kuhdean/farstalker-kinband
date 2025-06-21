@@ -10,13 +10,18 @@ let hasInitiative = true; // Default, will be set by user
 // --- DOM ELEMENT SELECTORS ---
 const rosterBuilderView = document.getElementById('roster-builder-view');
 const gameTrackerView = document.getElementById('game-tracker-view');
-const poolContainer = document.getElementById('pool-list');
+const operativeSelectionGrid = document.getElementById('operative-selection-grid');
+const equipmentSelectionGrid = document.getElementById('equipment-selection-grid');
 const rosterListContainer = document.getElementById('roster-list-container');
 const rosterCountSpan = document.getElementById('roster-count');
 const validationMessage = document.getElementById('roster-validation-message');
 const startGameBtn = document.getElementById('start-game-btn');
 const activeCardsContainer = document.getElementById('active-operative-cards');
-const referencePanel = document.getElementById('reference-panel');
+const factionRulesAccordionContainer = document.getElementById('faction-rules-accordion-container');
+const strategicPloysAccordionContainer = document.getElementById('strategic-ploys-accordion-container');
+const firefightPloysAccordionContainer = document.getElementById('firefight-ploys-accordion-container');
+const factionEquipmentAccordionContainer = document.getElementById('faction-equipment-accordion-container');
+const universalEquipmentAccordionContainer = document.getElementById('universal-equipment-accordion-container');
 const turnValueSpan = document.getElementById('turn-value');
 const cpValueSpan = document.getElementById('cp-value');
 const vpValueSpan = document.getElementById('vp-value');
@@ -24,11 +29,10 @@ const readyAllBtn = document.getElementById('ready-all-btn');
 const initiativeHolderSpan = document.getElementById('initiative-holder');
 const resetRosterBtn = document.getElementById('reset-roster-btn');
 const equipmentModal = document.getElementById('equipment-modal');
-const availableEquipmentPool = document.getElementById('available-equipment-pool');
-const chosenKillTeamEquipmentList = document.getElementById('chosen-kill-team-equipment');
+const chosenKillTeamEquipmentList = document.getElementById('chosen-kill-team-equipment-list');
 const epSpentUI = document.getElementById('ep-spent-ui');
 const equipmentSelectedCount = document.getElementById('equipment-selected-count');
-const chosenEquipmentDisplayArea = document.getElementById('chosen-equipment-display-area');
+const chosenEquipmentCardContainer = document.getElementById('chosen-equipment-card-container');
 
 function loadState() {
     const rosterData = localStorage.getItem('activeRoster');
@@ -62,8 +66,8 @@ function resetRoster() {
 // --- INITIALIZATION ---
 document.addEventListener('DOMContentLoaded', () => {
     loadState();
-    renderOperativePool();
-    renderEquipmentPool();
+    renderOperativeSelectionGrid();
+    renderEquipmentSelectionGrid();
     updateEquipmentUI();
     bindStaticEventListeners();
     renderRosterList();
@@ -71,25 +75,38 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // --- ROSTER BUILDER LOGIC ---
-function renderOperativePool() {poolContainer.innerHTML = '';operativesData.forEach(opData => {const button = document.createElement('button');button.classList.add('operative-pool-button');button.textContent = `${opData.name} ${opData.isLeader ? '(Leader)' : ''}`;button.dataset.id = opData.id;button.addEventListener('click', () => addOperativeToRoster(opData.id));poolContainer.appendChild(button);});}
+function renderOperativeSelectionGrid() {
+    operativeSelectionGrid.innerHTML = '';
+    operativesData.forEach(opData => {
+        const tile = document.createElement('div');
+        tile.classList.add('operative-tile');
+        tile.innerHTML = `<strong>${opData.name}</strong>${opData.isLeader ? ' <span class="leader-tag">Leader</span>' : ''}`;
+        const validation = validateRosterAddition(opData);
+        if (!validation.isValid) {
+            tile.classList.add('disabled');
+        } else {
+            tile.addEventListener('click', () => addOperativeToRoster(opData.id));
+        }
+        operativeSelectionGrid.appendChild(tile);
+    });
+}
 
-function renderEquipmentPool() {
-    if (!availableEquipmentPool) return;
-    availableEquipmentPool.innerHTML = '';
+function renderEquipmentSelectionGrid() {
+    equipmentSelectionGrid.innerHTML = '';
     const allEquip = [...factionEquipment, ...universalEquipment];
     allEquip.forEach(eq => {
-        const card = document.createElement('div');
-        card.classList.add('equipment-card');
+        const tile = document.createElement('div');
+        tile.classList.add('equipment-tile');
+        tile.innerHTML = `<strong>${eq.name}</strong> (${eq.epCost}EP)<div><small>${parseKeywords(eq.text)}</small></div>`;
         const inRoster = killTeamEquipment.some(e => e.name === eq.name);
-        const btn = document.createElement('button');
-        btn.textContent = inRoster ? 'Remove' : 'Add';
-        btn.disabled = !inRoster && (killTeamEquipment.length >= MAX_EQUIPMENT_ITEMS || gameState.spentEp + eq.epCost > gameState.totalEp);
-        btn.addEventListener('click', () => {
-            if (inRoster) removeKillTeamEquipment(eq.name); else addKillTeamEquipment(eq.name);
-        });
-        card.innerHTML = `<strong>${eq.name}</strong> (${eq.epCost}EP)<div><small>${parseKeywords(eq.text)}</small></div>`;
-        card.appendChild(btn);
-        availableEquipmentPool.appendChild(card);
+        const epExceeded = gameState.spentEp + eq.epCost > gameState.totalEp;
+        const itemLimit = killTeamEquipment.length >= MAX_EQUIPMENT_ITEMS;
+        if (inRoster || epExceeded || itemLimit) {
+            tile.classList.add('disabled');
+        } else {
+            tile.addEventListener('click', () => addKillTeamEquipment(eq.name));
+        }
+        equipmentSelectionGrid.appendChild(tile);
     });
 }
 
@@ -97,7 +114,7 @@ function updateEquipmentUI() {
     epSpentUI.textContent = gameState.spentEp;
     equipmentSelectedCount.textContent = killTeamEquipment.length;
     chosenKillTeamEquipmentList.innerHTML = killTeamEquipment.map(eq => `<li>${eq.name}</li>`).join('');
-    renderEquipmentPool();
+    renderEquipmentSelectionGrid();
     renderChosenEquipmentCards();
 }
 
@@ -152,6 +169,8 @@ function addOperativeToRoster(opId) {
     };
     activeRoster.push(opInstance);
     renderRosterList();
+    renderOperativeSelectionGrid();
+    updateEquipmentUI();
     validateFullRoster();
     showValidationMessage('Operative added.', true);
     saveState();
@@ -164,6 +183,8 @@ function removeOperativeFromRoster(instanceId) {
     }
     activeRoster = activeRoster.filter(op => op.instanceId != instanceId);
     renderRosterList();
+    renderOperativeSelectionGrid();
+    updateEquipmentUI();
     validateFullRoster();
     saveState();
 }
@@ -282,9 +303,9 @@ function startGame() {
 
 function renderGameView() {
     renderDashboard();
-    renderReferencePanel();
-    renderAllOperativeCards();
     renderChosenEquipmentCards();
+    renderReferenceAccordions();
+    renderAllOperativeCards();
 }
 
 function renderDashboard() {
@@ -294,24 +315,22 @@ function renderDashboard() {
     initiativeHolderSpan.textContent = hasInitiative ? "YOU" : "OPPONENT";
 }
 
-function renderReferencePanel() {
-    const createAccordion = (title, items, isPloy) => {
+function renderReferenceAccordions() {
+    const makeAccordion = (title, items, isPloy) => {
         const listItems = items.map(item => {
             if (isPloy) {
                 return `<li><button class="ploy-button" data-ploy-name="${item.name}" data-cp-cost="${item.cp}">${item.name} (${item.cp}CP)</button><div class="ploy-text">${parseKeywords(item.text)}</div></li>`;
             }
             return `<li><strong>${item.name}${item.cp ? ` (${item.cp}CP)` : ''}:</strong> ${parseKeywords(item.text)}</li>`;
         }).join('');
-        return `
-            <div>
-                <button class="accordion">${title}</button>
-                <div class="accordion-content"><ul>${listItems}</ul></div>
-            </div>`;
+        return `<div><button class="accordion">${title}</button><div class="accordion-content"><ul>${listItems}</ul></div></div>`;
     };
-    referencePanel.innerHTML = createAccordion('Faction Rules', factionRules) +
-                               createAccordion('Strategic Ploys', strategicPloys, true) +
-                               createAccordion('Firefight Ploys', firefightPloys, true) +
-                               createAccordion('Faction Equipment', factionEquipment);
+
+    factionRulesAccordionContainer.innerHTML = makeAccordion('Faction Rules', factionRules);
+    strategicPloysAccordionContainer.innerHTML = makeAccordion('Strategic Ploys', strategicPloys, true);
+    firefightPloysAccordionContainer.innerHTML = makeAccordion('Firefight Ploys', firefightPloys, true);
+    factionEquipmentAccordionContainer.innerHTML = makeAccordion('Faction Equipment', factionEquipment);
+    universalEquipmentAccordionContainer.innerHTML = makeAccordion('Universal Equipment', universalEquipment);
 
     document.querySelectorAll('.accordion').forEach(button => {
         button.addEventListener('click', function() {
@@ -323,13 +342,13 @@ function renderReferencePanel() {
 }
 
 function renderChosenEquipmentCards() {
-    if (!chosenEquipmentDisplayArea) return;
-    chosenEquipmentDisplayArea.innerHTML = '';
+    if (!chosenEquipmentCardContainer) return;
+    chosenEquipmentCardContainer.innerHTML = '';
     killTeamEquipment.forEach(eq => {
         const div = document.createElement('div');
         div.classList.add('chosen-equipment-card');
         div.innerHTML = `<strong>${eq.name}</strong> (${eq.epCost}EP)<div><small>${parseKeywords(eq.text)}</small></div>`;
-        chosenEquipmentDisplayArea.appendChild(div);
+        chosenEquipmentCardContainer.appendChild(div);
     });
 }
 
