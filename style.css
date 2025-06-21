@@ -62,7 +62,7 @@
 
 body {
     background-color: var(--app-bg);
-    font-family: 'Roboto Mono', monospace;
+    font-family: 'Inter', sans-serif;
     color: var(--text-color-primary);
     margin: 0; padding: 20px;
 }
@@ -81,7 +81,7 @@ body::after {
 }
 
 header { background-color: var(--card-header-bg); color: var(--card-header-text); padding: 15px 25px; margin-bottom: 20px; border: 1px solid var(--accent-color-primary); box-shadow: var(--card-shadow); display: flex; justify-content: space-between; align-items: center; }
-h1, h2, h3, h4, h5 { margin-top: 0; margin-bottom: 0.5em; font-family: 'VT323', monospace; text-shadow: none; }
+h1, h2, h3, h4, h5 { margin-top: 0; margin-bottom: 0.5em; font-family: 'Inter', sans-serif; text-shadow: none; }
 .header-actions { display: flex; gap: 10px; }
 button {
     cursor: pointer;
@@ -146,7 +146,7 @@ button:hover {
 }
 
 .selection-category h3 {
-    font-family: 'VT323', monospace;
+    font-family: 'Inter', sans-serif;
     color: var(--accent-color-primary);
     text-shadow: none;
     margin-bottom: 6px;
@@ -180,7 +180,7 @@ button:hover {
 .operative-tile:hover,
 .equipment-tile:hover {
     background-color: rgba(0, 119, 255, 0.05);
-    box-shadow: none;
+    box-shadow: 0 0 8px rgba(0,119,255,0.6);
 }
 
 .operative-tile.disabled,
@@ -197,7 +197,7 @@ button:hover {
 
 .operative-tile strong,
 .equipment-tile strong {
-    font-family: 'Roboto Mono', monospace;
+    font-family: 'Inter', sans-serif;
     font-size: 0.9em;
     color: var(--text-color-primary);
     display: block;
@@ -248,7 +248,7 @@ button:hover {
 .operative-tile.selected,
 .equipment-tile.selected {
     border-color: var(--accent-color-secondary);
-    box-shadow: none;
+    box-shadow: 0 0 10px var(--accent-color-secondary);
 }
 
 
@@ -310,7 +310,7 @@ button:hover {
 }
 
 .grid-item h3 {
-    font-family: 'VT323', monospace;
+    font-family: 'Inter', sans-serif;
     color: var(--accent-color-primary);
     text-shadow: none;
     margin-bottom: 10px;
@@ -336,12 +336,12 @@ button:hover {
     padding: 10px;
     flex-basis: calc(33.333% - 10px);
     min-width: 200px;
-    box-shadow: none;
+    box-shadow: 0 0 5px var(--accent-color-secondary);
     font-size: 0.85em;
     line-height: 1.4;
 }
 .chosen-equipment-card strong {
-    font-family: 'Roboto Mono', monospace;
+    font-family: 'Inter', sans-serif;
     color: var(--accent-color-primary);
     display: block;
     margin-bottom: 5px;
@@ -411,6 +411,21 @@ button:hover {
     margin-top: 5px;
 }
 
+/* Reference lists displayed in grid */
+.reference-list {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+.reference-list li {
+    padding: 6px 0;
+    border-bottom: 1px solid var(--accent-color-primary);
+    font-size: 0.9em;
+}
+.reference-list li:last-child {
+    border-bottom: none;
+}
+
 /* --- OPERATIVE CARD STYLES (NEW/UPDATED) --- */
 #active-operative-cards {
     display: grid;
@@ -431,10 +446,17 @@ button:hover {
 .card-header {
     background-color: var(--card-header-bg);
     color: var(--card-header-text);
-    padding: 8px 12px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.card-title-area {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 8px;
 }
 
 .card-title-area h3 {
@@ -444,7 +466,7 @@ button:hover {
     letter-spacing: 0.01em;
     color: var(--card-header-text);
     text-shadow: none;
-    font-family: 'VT323', monospace;
+    font-family: 'Inter', sans-serif;
 }
 
 .operative-tags-container {
@@ -477,9 +499,9 @@ button:hover {
     display: grid; /* Use grid for easy alignment */
     grid-template-columns: repeat(4, 1fr); /* Four stats */
     gap: 3px;
-    padding: 6px 8px;
-    background-color: var(--card-section-bg);
-    border-bottom: 1px solid var(--accent-color-primary);
+    padding: 4px 0 0 0;
+    background-color: transparent;
+    border-bottom: none;
     text-align: center;
 }
 
@@ -586,7 +608,7 @@ button:hover {
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: var(--text-color-secondary);
-    margin-top: 10px;
+    margin-top: 8px;
     margin-bottom: 4px;
     padding-bottom: 4px;
     border-bottom: 1px solid var(--accent-color-primary);
@@ -598,7 +620,7 @@ button:hover {
 .weapon-table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     font-size: 0.75em; /* Denser table text */
 }
 .weapon-table th, .weapon-table td {
@@ -624,7 +646,7 @@ button:hover {
 }
 .ability-list li, .action-list li {
     margin-bottom: 0; /* Let padding handle spacing */
-    padding: 3px 2px; /* Add some vertical padding */
+    padding: 3px 0;
     border-bottom: 1px dotted var(--accent-color-primary);
 }
 .ability-list li:last-child, .action-list li:last-child {
@@ -680,5 +702,5 @@ button:hover {
     font-size: 0.8em;
     line-height: 1.4;
     pointer-events: none;
-    box-shadow: none;
+    box-shadow: 0 0 5px var(--accent-color-primary);
 }

@@ -322,29 +322,21 @@ function renderDashboard() {
 }
 
 function renderReferenceAccordions() {
-    const makeAccordion = (title, items, isPloy) => {
+    const makeSection = (title, items, isPloy) => {
         const listItems = items.map(item => {
             if (isPloy) {
                 return `<li><button class="ploy-button" data-ploy-name="${item.name}" data-cp-cost="${item.cp}">${item.name} (${item.cp}CP)</button><div class="ploy-text">${parseKeywords(item.text)}</div></li>`;
             }
             return `<li><strong>${item.name}${item.cp ? ` (${item.cp}CP)` : ''}:</strong> ${parseKeywords(item.text)}</li>`;
         }).join('');
-        return `<div><button class="accordion">${title}</button><div class="accordion-content"><ul>${listItems}</ul></div></div>`;
+        return `<h3>${title}</h3><ul class="reference-list">${listItems}</ul>`;
     };
 
-    factionRulesAccordionContainer.innerHTML = makeAccordion('Faction Rules', factionRules);
-    strategicPloysAccordionContainer.innerHTML = makeAccordion('Strategic Ploys', strategicPloys, true);
-    firefightPloysAccordionContainer.innerHTML = makeAccordion('Firefight Ploys', firefightPloys, true);
-    factionEquipmentAccordionContainer.innerHTML = makeAccordion('Faction Equipment', factionEquipment);
-    universalEquipmentAccordionContainer.innerHTML = makeAccordion('Universal Equipment', universalEquipment);
-
-    document.querySelectorAll('.accordion').forEach(button => {
-        button.addEventListener('click', function() {
-            this.classList.toggle('active');
-            const content = this.nextElementSibling;
-            content.style.maxHeight = content.style.maxHeight ? null : content.scrollHeight + "px";
-        });
-    });
+    factionRulesAccordionContainer.innerHTML = makeSection('Faction Rules', factionRules);
+    strategicPloysAccordionContainer.innerHTML = makeSection('Strategic Ploys', strategicPloys, true);
+    firefightPloysAccordionContainer.innerHTML = makeSection('Firefight Ploys', firefightPloys, true);
+    factionEquipmentAccordionContainer.innerHTML = makeSection('Faction Equipment', factionEquipment);
+    universalEquipmentAccordionContainer.innerHTML = makeSection('Universal Equipment', universalEquipment);
 }
 
 function renderChosenEquipmentCards() {
@@ -408,14 +400,11 @@ function renderAllOperativeCards() {
                     <h3>${op.name}</h3>
                     ${tagsHTML ? `<div class="operative-tags-container">${tagsHTML}</div>` : ''}
                 </div>
-                <div class="status-icon-tray"></div> <!-- For future status icons -->
-            </div>
-
-            <div class="operative-core-stats">
-                <div class="core-stat">
-                    <span class="core-stat-label">APL</span>
-                    <span class="core-stat-value">${op.stats.apl}${isInjured ? `<span class="stat-modifier">(${modifiedAPLDisplay})</span>` : ''}</span>
-                </div>
+                <div class="operative-core-stats">
+                    <div class="core-stat">
+                        <span class="core-stat-label">APL</span>
+                        <span class="core-stat-value">${op.stats.apl}${isInjured ? `<span class="stat-modifier">(${modifiedAPLDisplay})</span>` : ''}</span>
+                    </div>
                 <div class="core-stat">
                     <span class="core-stat-label">Move</span>
                     <span class="core-stat-value">${op.stats.move}${isInjured ? `<span class="stat-modifier">(${modifiedMoveDisplay})</span>` : ''}</span>
@@ -428,9 +417,10 @@ function renderAllOperativeCards() {
                     <span class="core-stat-label">Wounds</span>
                     <span class="core-stat-value">${op.stats.wounds}</span>
                 </div>
+                </div>
             </div>
-            
-            <div class="card-body"> <!-- Moved controls and main content into card-body -->
+
+            <div class="card-body">
                 <div class="health-bar" data-id="${op.instanceId}">
                     <div class="health-bar-fill"></div>
                     <div class="health-bar-text">${op.currentWounds} / ${op.stats.wounds}</div>
