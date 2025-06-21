@@ -74,25 +74,58 @@ body {
     background-color: var(--app-bg); /* Apply new page background */
     font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; /* Prioritize Inter/Roboto */
     color: var(--text-color-primary);
-    margin: 0; padding: 20px;
+    margin: 0;
+    padding: 10px;
 }
 
-header { background-color: var(--header-bg); color: white; padding: 15px 25px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; }
+header {
+    background-color: var(--header-bg);
+    color: white;
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 h1, h2, h3, h4, h5 { margin-top: 0; margin-bottom: 0.5em; } /* Added h5 */
 .header-actions { display: flex; gap: 10px; }
 button { cursor: pointer; border-radius: 5px; border: none; padding: 10px 15px; font-weight: bold; transition: all 0.2s ease; }
-.view-container { display: flex; gap: 20px; }
-#available-operatives-pool, #your-roster-list { flex: 1; background: var(--card-bg-main); padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+.view-container {
+    display: flex;
+    gap: 15px;
+}
+#available-operatives-pool,
+#your-roster-list {
+    flex: 1;
+    background: var(--card-bg-main);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
 
 /* --- ROSTER BUILDER --- */
 #roster-meta-info p { margin: 2px 0; }
 #roster-validation-message.error { color: var(--error-text-color); background-color: var(--error-message-color); padding: 5px; border-radius: 3px;}
 #roster-validation-message.valid { color: var(--valid-message-color); }
 
-.operative-pool-button { display: block; width: 100%; text-align: left; padding: 10px; margin-bottom: 5px; border: 1px solid var(--border-color); background-color: #f9f9f9; }
-.operative-pool-button:hover { background-color: #ecf0f1; }
+#master-selection-grid-area {
+    flex: 1;
+    background: var(--card-bg-main);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.selection-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+
+.operative-tile, .equipment-tile { border: 1px solid var(--card-border-light); background: var(--card-section-bg); border-radius: 4px; padding: 10px; cursor: pointer; }
+.operative-tile.disabled, .equipment-tile.disabled { opacity: 0.5; pointer-events: none; }
 .roster-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; background-color: #f9f9f9; border: 1px solid var(--border-color); margin-bottom: 5px; }
 .remove-op-btn { color: var(--injured-color-border); font-weight: bold; background: none; font-size: 1.2em; }
+.equip-op-btn { margin-right: 8px; }
+.roster-item-equipment { margin-top: 4px; font-size: 0.85em; color: var(--text-color-secondary); }
 
 
 /* --- GAME TRACKER DASHBOARD --- */
@@ -102,20 +135,37 @@ button { cursor: pointer; border-radius: 5px; border: none; padding: 10px 15px; 
 #game-state-dashboard button:hover { background-color: var(--accent-color-secondary); } /* Updated accent color hover */
 
 /* --- REFERENCE PANEL (ACCORDION) --- */
-#reference-panel { margin-bottom: 20px; }
-.accordion { background-color: var(--card-header-bg); color: var(--card-header-text); width: 100%; text-align: left; padding: 15px; font-size: 1.1em; border-radius: 5px; margin-top: 10px; }
+#reference-panel { margin-bottom: 15px; }
+.accordion {
+    background-color: var(--card-header-bg);
+    color: var(--card-header-text);
+    width: 100%;
+    text-align: left;
+    padding: 12px;
+    font-size: 1.1em;
+    border-radius: 5px;
+    margin-top: 8px;
+}
 .accordion:after { content: '\\02795'; font-size: 0.8em; color: var(--text-color-subtle); float: right; }
 .accordion.active:after { content: "\\2796"; }
-.accordion-content { background-color: var(--card-bg-main); padding: 0 18px; max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; border: 1px solid var(--card-border-light); border-top: none; }
-.accordion-content ul { list-style: none; padding-left: 0; margin: 15px 0; }
-.accordion-content li { padding: 10px 0; border-bottom: 1px solid var(--card-border-light); }
+.accordion-content {
+    background-color: var(--card-bg-main);
+    padding: 0 16px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    border: 1px solid var(--card-border-light);
+    border-top: none;
+}
+.accordion-content ul { list-style: none; padding-left: 0; margin: 12px 0; }
+.accordion-content li { padding: 8px 0; border-bottom: 1px solid var(--card-border-light); }
 .accordion-content li:last-child { border-bottom: none; }
 
 /* --- OPERATIVE CARD STYLES (NEW/UPDATED) --- */
 #active-operative-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); /* Slightly narrower min-width */
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 15px;
 }
 
 .operative-card {
@@ -275,13 +325,14 @@ button { cursor: pointer; border-radius: 5px; border: none; padding: 10px 15px; 
     opacity: 0.7;
 }
 
-.card-body h4, .card-body h5 { /* Section Titles */
+.card-body h4,
+.card-body h5 { /* Section Titles */
     font-size: 0.8em;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: var(--text-color-secondary);
-    margin-top: 20px;
+    margin-top: 15px;
     margin-bottom: 8px;
     padding-bottom: 4px;
     border-bottom: 1px solid var(--card-border-light);
@@ -375,3 +426,105 @@ button { cursor: pointer; border-radius: 5px; border: none; padding: 10px 15px; 
     pointer-events: none;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
+
+/* --- EQUIPMENT MODAL STYLES --- */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.modal-content {
+    background: var(--card-bg-main);
+    border: 1px solid var(--card-border-color);
+    border-radius: 6px;
+    padding: 15px;
+    max-width: 420px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: var(--card-shadow);
+}
+
+.equip-item { margin-bottom: 10px; }
+.equip-item button { margin-left: 8px; }
+
+/* --- KILL TEAM EQUIPMENT SELECTION --- */
+#kill-team-equipment-selector {
+    margin-top: 15px;
+    background: var(--card-bg-main);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: var(--card-shadow);
+}
+
+#available-equipment-pool {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.equipment-card {
+    border: 1px solid var(--card-border-light);
+    padding: 10px;
+    border-radius: 4px;
+    width: 180px;
+    background: var(--card-section-bg);
+}
+.equipment-card button { margin-top: 5px; }
+
+#chosen-kill-team-equipment-list { list-style: none; padding-left: 0; }
+#chosen-kill-team-equipment-list li { margin-bottom: 5px; }
+
+#chosen-equipment-display-area {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+#game-tracker-main-content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.grid-item {
+    background: var(--card-bg-main);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+#chosen-equipment-card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.chosen-equipment-card {
+    border: 1px solid var(--card-border-light);
+    background: var(--card-bg-main);
+    padding: 10px;
+    border-radius: 4px;
+    width: 200px;
+}
+
+.ploy-button {
+    background: var(--button-bg);
+    border: 1px solid var(--button-border-color);
+    color: var(--button-text-color);
+    padding: 5px 8px;
+    border-radius: 4px;
+    margin-right: 6px;
+}
+.ploy-button:disabled { opacity: 0.6; }

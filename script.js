@@ -2,47 +2,63 @@
 
 // --- GLOBAL STATE ---
 let activeRoster = [];
-let gameState = { turn: 1, cp: 2, vp: 0, totalEp: 10, spentEp: 0 }; // Added EP tracking
+let gameState = { turn: 1, cp: 2, vp: 0, totalEp: 10, spentEp: 0 };
+let killTeamEquipment = [];
+const MAX_EQUIPMENT_ITEMS = 4;
 let hasInitiative = true; // Default, will be set by user
 
 // --- DOM ELEMENT SELECTORS ---
 const rosterBuilderView = document.getElementById('roster-builder-view');
 const gameTrackerView = document.getElementById('game-tracker-view');
-const poolContainer = document.getElementById('pool-list');
+const operativeSelectionGrid = document.getElementById('operative-selection-grid');
+const equipmentSelectionGrid = document.getElementById('equipment-selection-grid');
 const rosterListContainer = document.getElementById('roster-list-container');
 const rosterCountSpan = document.getElementById('roster-count');
 const validationMessage = document.getElementById('roster-validation-message');
 const startGameBtn = document.getElementById('start-game-btn');
 const activeCardsContainer = document.getElementById('active-operative-cards');
-const referencePanel = document.getElementById('reference-panel');
+const factionRulesAccordionContainer = document.getElementById('faction-rules-accordion-container');
+const strategicPloysAccordionContainer = document.getElementById('strategic-ploys-accordion-container');
+const firefightPloysAccordionContainer = document.getElementById('firefight-ploys-accordion-container');
+const factionEquipmentAccordionContainer = document.getElementById('faction-equipment-accordion-container');
+const universalEquipmentAccordionContainer = document.getElementById('universal-equipment-accordion-container');
 const turnValueSpan = document.getElementById('turn-value');
 const cpValueSpan = document.getElementById('cp-value');
 const vpValueSpan = document.getElementById('vp-value');
 const readyAllBtn = document.getElementById('ready-all-btn');
-const epSpentSpan = document.getElementById('ep-spent');
-const epTotalSpan = document.getElementById('ep-total');
 const initiativeHolderSpan = document.getElementById('initiative-holder');
 const resetRosterBtn = document.getElementById('reset-roster-btn');
+const equipmentModal = document.getElementById('equipment-modal');
+const chosenKillTeamEquipmentList = document.getElementById('chosen-kill-team-equipment-list');
+const epSpentUI = document.getElementById('ep-spent-ui');
+const equipmentSelectedCount = document.getElementById('equipment-selected-count');
+const chosenEquipmentCardContainer = document.getElementById('chosen-equipment-card-container');
 
 function loadState() {
     const rosterData = localStorage.getItem('activeRoster');
     const gameData = localStorage.getItem('gameState');
+    const equipData = localStorage.getItem('killTeamEquipment');
     if (rosterData) {
         try { activeRoster = JSON.parse(rosterData); } catch { activeRoster = []; }
     }
     if (gameData) {
         try { gameState = JSON.parse(gameData); } catch { gameState = { turn: 1, cp: 2, vp: 0, totalEp: 10, spentEp: 0 }; }
     }
+    if (equipData) {
+        try { killTeamEquipment = JSON.parse(equipData); } catch { killTeamEquipment = []; }
+    }
 }
 
 function saveState() {
     localStorage.setItem('activeRoster', JSON.stringify(activeRoster));
     localStorage.setItem('gameState', JSON.stringify(gameState));
+    localStorage.setItem('killTeamEquipment', JSON.stringify(killTeamEquipment));
 }
 
 function resetRoster() {
     localStorage.removeItem('activeRoster');
     localStorage.removeItem('gameState');
+    localStorage.removeItem('killTeamEquipment');
     location.reload();
 }
 
@@ -50,15 +66,78 @@ function resetRoster() {
 // --- INITIALIZATION ---
 document.addEventListener('DOMContentLoaded', () => {
     loadState();
-    renderOperativePool();
+    renderOperativeSelectionGrid();
+    renderEquipmentSelectionGrid();
+    updateEquipmentUI();
     bindStaticEventListeners();
     renderRosterList();
     validateFullRoster();
-    updateEpDisplay(); // Initialize EP display
 });
 
 // --- ROSTER BUILDER LOGIC ---
-function renderOperativePool() {poolContainer.innerHTML = '';operativesData.forEach(opData => {const button = document.createElement('button');button.classList.add('operative-pool-button');button.textContent = `${opData.name} ${opData.isLeader ? '(Leader)' : ''}`;button.dataset.id = opData.id;button.addEventListener('click', () => addOperativeToRoster(opData.id));poolContainer.appendChild(button);});}
+function renderOperativeSelectionGrid() {
+    operativeSelectionGrid.innerHTML = '';
+    operativesData.forEach(opData => {
+        const tile = document.createElement('div');
+        tile.classList.add('operative-tile');
+        tile.innerHTML = `<strong>${opData.name}</strong>${opData.isLeader ? ' <span class="leader-tag">Leader</span>' : ''}`;
+        const validation = validateRosterAddition(opData);
+        if (!validation.isValid) {
+            tile.classList.add('disabled');
+        } else {
+            tile.addEventListener('click', () => addOperativeToRoster(opData.id));
+        }
+        operativeSelectionGrid.appendChild(tile);
+    });
+}
+
+function renderEquipmentSelectionGrid() {
+    equipmentSelectionGrid.innerHTML = '';
+    const allEquip = [...factionEquipment, ...universalEquipment];
+    allEquip.forEach(eq => {
+        const tile = document.createElement('div');
+        tile.classList.add('equipment-tile');
+        tile.innerHTML = `<strong>${eq.name}</strong> (${eq.epCost}EP)<div><small>${parseKeywords(eq.text)}</small></div>`;
+        const inRoster = killTeamEquipment.some(e => e.name === eq.name);
+        const epExceeded = gameState.spentEp + eq.epCost > gameState.totalEp;
+        const itemLimit = killTeamEquipment.length >= MAX_EQUIPMENT_ITEMS;
+        if (inRoster || epExceeded || itemLimit) {
+            tile.classList.add('disabled');
+        } else {
+            tile.addEventListener('click', () => addKillTeamEquipment(eq.name));
+        }
+        equipmentSelectionGrid.appendChild(tile);
+    });
+}
+
+function updateEquipmentUI() {
+    epSpentUI.textContent = gameState.spentEp;
+    equipmentSelectedCount.textContent = killTeamEquipment.length;
+    chosenKillTeamEquipmentList.innerHTML = killTeamEquipment.map(eq => `<li>${eq.name}</li>`).join('');
+    renderEquipmentSelectionGrid();
+    renderChosenEquipmentCards();
+}
+
+function addKillTeamEquipment(name) {
+    const item = [...factionEquipment, ...universalEquipment].find(eq => eq.name === name);
+    if (!item) return;
+    if (killTeamEquipment.length >= MAX_EQUIPMENT_ITEMS) return;
+    if (gameState.spentEp + item.epCost > gameState.totalEp) return;
+    if (killTeamEquipment.some(eq => eq.name === name)) return;
+    killTeamEquipment.push(item);
+    gameState.spentEp += item.epCost;
+    updateEquipmentUI();
+    saveState();
+}
+
+function removeKillTeamEquipment(name) {
+    const index = killTeamEquipment.findIndex(eq => eq.name === name);
+    if (index === -1) return;
+    const [removed] = killTeamEquipment.splice(index, 1);
+    gameState.spentEp = Math.max(0, gameState.spentEp - removed.epCost);
+    updateEquipmentUI();
+    saveState();
+}
 
 function showValidationMessage(message, isValid) {
     validationMessage.textContent = message;
@@ -90,6 +169,8 @@ function addOperativeToRoster(opId) {
     };
     activeRoster.push(opInstance);
     renderRosterList();
+    renderOperativeSelectionGrid();
+    updateEquipmentUI();
     validateFullRoster();
     showValidationMessage('Operative added.', true);
     saveState();
@@ -98,14 +179,13 @@ function addOperativeToRoster(opId) {
 function removeOperativeFromRoster(instanceId) {
     const operativeToRemove = activeRoster.find(op => op.instanceId == instanceId);
     if (operativeToRemove && operativeToRemove.chosenEquipment.length > 0) {
-        operativeToRemove.chosenEquipment.forEach(eq => {
-            gameState.spentEp -= eq.epCost;
-        });
+        // Equipment removal no longer adjusts EP
     }
     activeRoster = activeRoster.filter(op => op.instanceId != instanceId);
     renderRosterList();
+    renderOperativeSelectionGrid();
+    updateEquipmentUI();
     validateFullRoster();
-    updateEpDisplay();
     saveState();
 }
 
@@ -114,17 +194,73 @@ function renderRosterList() {
     activeRoster.forEach(op => {
         const item = document.createElement('div');
         item.classList.add('roster-item');
-        item.innerHTML = `<span>${op.name}</span><button class="remove-op-btn" data-id="${op.instanceId}">X</button>`;
+        const eqList = op.chosenEquipment.map(eq => eq.name).join(', ');
+        item.innerHTML = `
+            <div>
+                <span>${op.name}</span>
+                ${eqList ? `<div class="roster-item-equipment">${eqList}</div>` : ''}
+            </div>
+            <div>
+                <button class="equip-op-btn" data-id="${op.instanceId}">Equip</button>
+                <button class="remove-op-btn" data-id="${op.instanceId}">X</button>
+            </div>`;
         item.querySelector('.remove-op-btn').addEventListener('click', () => removeOperativeFromRoster(op.instanceId));
         rosterListContainer.appendChild(item);
     });
     rosterCountSpan.textContent = activeRoster.length;
-    updateEpDisplay();
 }
 
-function updateEpDisplay() {
-    epSpentSpan.textContent = gameState.spentEp;
-    epTotalSpan.textContent = gameState.totalEp;
+
+function openEquipmentModal(instanceId) {
+    const operative = activeRoster.find(op => op.instanceId == instanceId);
+    if (!operative) return;
+
+    let availableHTML = factionEquipment.map(eq => {
+        const disabled = (operative.id === 'hound' && (eq.name === 'Meat' || eq.name === 'Trophy')) ||
+                         operative.chosenEquipment.some(e => e.name === eq.name);
+        return `<li class="equip-item">${eq.name} <button class="add-eq-btn" data-id="${instanceId}" data-eq="${eq.name}" ${disabled ? 'disabled' : ''}>Add</button><div><small>${parseKeywords(eq.text)}</small></div></li>`;
+    }).join('');
+
+    let chosenHTML = operative.chosenEquipment.map(eq => `<li class="equip-item">${eq.name} <button class="remove-eq-btn" data-id="${instanceId}" data-eq="${eq.name}">Remove</button></li>`).join('');
+    if (!chosenHTML) chosenHTML = '<li class="equip-item"><em>None</em></li>';
+
+    equipmentModal.innerHTML = `<div class="modal-content">
+        <h3>Equip ${operative.name}</h3>
+        <h4>Available</h4>
+        <ul>${availableHTML}</ul>
+        <h4>Chosen</h4>
+        <ul>${chosenHTML}</ul>
+        <button class="close-modal">Close</button>
+    </div>`;
+    equipmentModal.style.display = 'flex';
+}
+
+function closeEquipmentModal() {
+    equipmentModal.style.display = 'none';
+    equipmentModal.innerHTML = '';
+}
+
+function addEquipmentToOperative(instanceId, eqName) {
+    const operative = activeRoster.find(op => op.instanceId == instanceId);
+    const eqData = factionEquipment.find(eq => eq.name === eqName);
+    if (!operative || !eqData) return;
+    if (operative.id === 'hound' && (eqName === 'Meat' || eqName === 'Trophy')) return;
+    if (operative.chosenEquipment.some(eq => eq.name === eqName)) return;
+    operative.chosenEquipment.push(eqData);
+    renderRosterList();
+    saveState();
+    openEquipmentModal(instanceId);
+}
+
+function removeEquipmentFromOperative(instanceId, eqName) {
+    const operative = activeRoster.find(op => op.instanceId == instanceId);
+    if (!operative) return;
+    const index = operative.chosenEquipment.findIndex(eq => eq.name === eqName);
+    if (index === -1) return;
+    operative.chosenEquipment.splice(index, 1);
+    renderRosterList();
+    saveState();
+    openEquipmentModal(instanceId);
 }
 
 function validateRosterAddition(opData) {
@@ -138,8 +274,9 @@ function validateRosterAddition(opData) {
 function validateFullRoster() {
     const hasLeader = activeRoster.some(op => op.isLeader);
     const isFull = activeRoster.length === 12;
+    const eqValid = gameState.spentEp <= gameState.totalEp && killTeamEquipment.length <= MAX_EQUIPMENT_ITEMS;
 
-    if (hasLeader && isFull) {
+    if (hasLeader && isFull && eqValid) {
         startGameBtn.disabled = false;
         showValidationMessage('Roster is valid. Ready to start!', true);
     } else {
@@ -147,6 +284,7 @@ function validateFullRoster() {
         let message = "Roster requires: ";
         if (!hasLeader) message += "1 Leader. ";
         if (!isFull) message += `${12 - activeRoster.length} more operatives.`;
+        if (!eqValid) message += " Check equipment selection.";
         showValidationMessage(message.trim(), false);
     }
 }
@@ -165,7 +303,8 @@ function startGame() {
 
 function renderGameView() {
     renderDashboard();
-    renderReferencePanel();
+    renderChosenEquipmentCards();
+    renderReferenceAccordions();
     renderAllOperativeCards();
 }
 
@@ -176,19 +315,22 @@ function renderDashboard() {
     initiativeHolderSpan.textContent = hasInitiative ? "YOU" : "OPPONENT";
 }
 
-function renderReferencePanel() {
-    const createAccordion = (title, items) => {
-        const listItems = items.map(item => `<li><strong>${item.name} ${item.cp ? `(${item.cp}CP)` : ''}${item.epCost ? ` (${item.epCost}EP)` : ''}:</strong> ${item.text}</li>`).join('');
-        return `
-            <div>
-                <button class="accordion">${title}</button>
-                <div class="accordion-content"><ul>${listItems}</ul></div>
-            </div>`;
+function renderReferenceAccordions() {
+    const makeAccordion = (title, items, isPloy) => {
+        const listItems = items.map(item => {
+            if (isPloy) {
+                return `<li><button class="ploy-button" data-ploy-name="${item.name}" data-cp-cost="${item.cp}">${item.name} (${item.cp}CP)</button><div class="ploy-text">${parseKeywords(item.text)}</div></li>`;
+            }
+            return `<li><strong>${item.name}${item.cp ? ` (${item.cp}CP)` : ''}:</strong> ${parseKeywords(item.text)}</li>`;
+        }).join('');
+        return `<div><button class="accordion">${title}</button><div class="accordion-content"><ul>${listItems}</ul></div></div>`;
     };
-    referencePanel.innerHTML = createAccordion('Faction Rules', factionRules) +
-                               createAccordion('Strategic Ploys', strategicPloys) +
-                               createAccordion('Firefight Ploys', firefightPloys) +
-                               createAccordion('Faction Equipment', factionEquipment);
+
+    factionRulesAccordionContainer.innerHTML = makeAccordion('Faction Rules', factionRules);
+    strategicPloysAccordionContainer.innerHTML = makeAccordion('Strategic Ploys', strategicPloys, true);
+    firefightPloysAccordionContainer.innerHTML = makeAccordion('Firefight Ploys', firefightPloys, true);
+    factionEquipmentAccordionContainer.innerHTML = makeAccordion('Faction Equipment', factionEquipment);
+    universalEquipmentAccordionContainer.innerHTML = makeAccordion('Universal Equipment', universalEquipment);
 
     document.querySelectorAll('.accordion').forEach(button => {
         button.addEventListener('click', function() {
@@ -196,6 +338,17 @@ function renderReferencePanel() {
             const content = this.nextElementSibling;
             content.style.maxHeight = content.style.maxHeight ? null : content.scrollHeight + "px";
         });
+    });
+}
+
+function renderChosenEquipmentCards() {
+    if (!chosenEquipmentCardContainer) return;
+    chosenEquipmentCardContainer.innerHTML = '';
+    killTeamEquipment.forEach(eq => {
+        const div = document.createElement('div');
+        div.classList.add('chosen-equipment-card');
+        div.innerHTML = `<strong>${eq.name}</strong> (${eq.epCost}EP)<div><small>${parseKeywords(eq.text)}</small></div>`;
+        chosenEquipmentCardContainer.appendChild(div);
     });
 }
 
@@ -241,7 +394,7 @@ function renderAllOperativeCards() {
 
         const abilitiesHTML = op.abilities.map(a => `<li><strong>${a.name}:</strong> ${parseKeywords(a.text)}</li>`).join('');
         const actionsHTML = (op.uniqueActions || []).map(a => `<li><strong>${a.name}:</strong> ${parseKeywords(a.text)}</li>`).join('');
-        const equipmentHTML = op.chosenEquipment.map(eq => `<li><small><em>${eq.name} (${eq.epCost}EP)</em></small></li>`).join('');
+        const equipmentHTML = op.chosenEquipment.map(eq => `<li><small><em>${eq.name}</em></small></li>`).join('');
 
         card.innerHTML = `
             <div class="card-header">
@@ -401,8 +554,35 @@ function modifyStateValue(key, amount) {
     saveState();
 }
 
-function showTooltip(keyword, event) {removeTooltip();let definition = "Definition not found.";const foundKey = Object.keys(keywordGlossary).find(k => keyword.toLowerCase().includes(k.split(' ')[0].toLowerCase()));if(foundKey) definition = keywordGlossary[foundKey];const tooltip = document.createElement('div');tooltip.classList.add('tooltip');tooltip.textContent = definition;document.body.appendChild(tooltip);tooltip.style.left = `${event.pageX + 10}px`;tooltip.style.top = `${event.pageY + 10}px`;}
-function removeTooltip() {const existingTooltip = document.querySelector('.tooltip');if (existingTooltip) {existingTooltip.remove();}}
+function usePloy(name, cpCost, buttonEl) {
+    if (gameState.cp < cpCost) return;
+    gameState.cp -= cpCost;
+    renderDashboard();
+    saveState();
+    if (buttonEl) {
+        buttonEl.disabled = true;
+        setTimeout(() => { buttonEl.disabled = false; }, 500);
+    }
+}
+
+function showTooltip(keyword, event) {
+    removeTooltip();
+    let definition = 'Definition not found.';
+    const foundKey = Object.keys(keywordGlossary)
+        .find(k => keyword.toLowerCase().includes(k.split(' ')[0].toLowerCase()));
+    if (foundKey) definition = keywordGlossary[foundKey];
+    const tooltip = document.createElement('div');
+    tooltip.classList.add('tooltip');
+    tooltip.textContent = definition;
+    document.body.appendChild(tooltip);
+    tooltip.style.left = `${event.pageX + 10}px`;
+    tooltip.style.top = `${event.pageY + 10}px`;
+}
+
+function removeTooltip() {
+    const existing = document.querySelector('.tooltip');
+    if (existing) existing.remove();
+}
 
 function bindStaticEventListeners() {
     startGameBtn.addEventListener('click', startGame);
@@ -416,6 +596,11 @@ function bindStaticEventListeners() {
         else if (target.matches('.order-toggle')) toggleOrder(target.dataset.id);
         else if (target.matches('.activation-status')) toggleActivation(target.dataset.id);
         else if (target.matches('.health-bar')) handleHealthClick(target.dataset.id, e);
+        else if (target.matches('.equip-op-btn')) openEquipmentModal(target.dataset.id);
+        else if (target.matches('.add-eq-btn')) addEquipmentToOperative(target.dataset.id, target.dataset.eq);
+        else if (target.matches('.remove-eq-btn')) removeEquipmentFromOperative(target.dataset.id, target.dataset.eq);
+        else if (target.matches('.close-modal')) closeEquipmentModal();
+        else if (target.matches('.ploy-button')) usePloy(target.dataset.ployName, parseInt(target.dataset.cpCost), target);
         else if (target.matches('.keyword')) showTooltip(target.textContent, e);
         else if (!target.closest('.keyword')) removeTooltip();
     });

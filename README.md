@@ -1,4 +1,4 @@
-# Farstalker Kinband Datasheets
+# Farstalker Kinband Datasheets - DEV
 
 This repository contains a small single‑page web app for building and tracking a **Farstalker Kinband** roster in *Warhammer 40,000: Kill Team*. It is entirely client side—open `index.html` in any modern browser to use it. The app lets you assemble a roster of operatives, view their rules, track wounds, orders, activation state and common in‑game counters.
 
@@ -29,3 +29,4 @@ The data in `data.js` is structured so that you can extend it with your own oper
 ## Purpose
 
 This tool began as a personal reference to keep track of all things Kroot during Kill Team games. It is intentionally lightweight and does not require any server or build step. Feel free to modify or adapt it for your own roster management needs.
+

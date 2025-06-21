@@ -13,8 +13,7 @@
         <header>
             <h1>Build Your Farstalker Kinband</h1>
             <div id="roster-meta-info">
-                 <p id="roster-validation-message">Select your operatives. You need 1 Leader and 11 others.</p>
-                 <p>Equipment Points: <span id="ep-spent">0</span> / <span id="ep-total">10</span></p>
+                <p id="roster-validation-message">Select your operatives. You need 1 Leader and 11 others.</p>
             </div>
             <div class="header-actions">
                 <button id="start-game-btn" disabled>Start Game</button>
@@ -22,14 +21,23 @@
             </div>
         </header>
         <div class="view-container">
-            <div id="available-operatives-pool">
-                <h2>Available Operatives</h2>
-                <div id="pool-list"></div>
+            <div id="master-selection-grid-area">
+                <h2>Build Your Kill Team</h2>
+                <div class="selection-category">
+                    <h3>Available Operatives</h3>
+                    <div id="operative-selection-grid" class="selection-grid"></div>
+                </div>
+                <div class="selection-category">
+                    <h3>Available Equipment (EP: <span id="ep-spent-ui">0</span>/10, Items: <span id="equipment-selected-count">0</span>/4)</h3>
+                    <div id="equipment-selection-grid" class="selection-grid"></div>
+                </div>
             </div>
+
             <div id="your-roster-list">
                 <h2>Your Roster (<span id="roster-count">0</span>/12)</h2>
                 <div id="roster-list-container"></div>
-                 <!-- Placeholder for adding equipment UI later -->
+                <h3>Chosen Kill Team Equipment:</h3>
+                <ul id="chosen-kill-team-equipment-list"></ul>
             </div>
         </div>
     </div>
@@ -58,15 +66,24 @@
             </div>
              <button id="ready-all-btn">Ready All & Next Turn</button>
         </header>
-
-        <div id="reference-panel">
-            <!-- Accordions will be generated here by JS -->
+        <div id="game-tracker-main-content-grid">
+            <div id="chosen-equipment-display-area" class="grid-item">
+                <h3>Selected Kill Team Equipment</h3>
+                <div id="chosen-equipment-card-container"></div>
+            </div>
+            <div id="faction-rules-accordion-container" class="grid-item"></div>
+            <div id="strategic-ploys-accordion-container" class="grid-item"></div>
+            <div id="firefight-ploys-accordion-container" class="grid-item"></div>
+            <div id="faction-equipment-accordion-container" class="grid-item"></div>
+            <div id="universal-equipment-accordion-container" class="grid-item"></div>
         </div>
 
         <div id="active-operative-cards">
             <!-- Operative cards will be generated here by JS -->
         </div>
     </div>
+
+    <div id="equipment-modal" class="modal" style="display: none;"></div>
 
     <script src="data.js"></script>
     <script src="script.js"></script>
