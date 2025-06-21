@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kroot-Sheet: Dynamic Roster v2</title>
+    <link href="https://rsms.me/inter/inter.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="roster-builder-view">
+        <header>
+            <h1>Build Your Farstalker Kinband</h1>
+            <div id="roster-meta-info">
+                 <p id="roster-validation-message">Select your operatives. You need 1 Leader and 11 others.</p>
+                 <p>Equipment Points: <span id="ep-spent">0</span> / <span id="ep-total">10</span></p>
+            </div>
+            <div class="header-actions">
+                <button id="start-game-btn" disabled>Start Game</button>
+                <button id="reset-roster-btn">Reset Roster</button>
+            </div>
+        </header>
+        <div class="view-container">
+            <div id="available-operatives-pool">
+                <h2>Available Operatives</h2>
+                <div id="pool-list"></div>
+            </div>
+            <div id="your-roster-list">
+                <h2>Your Roster (<span id="roster-count">0</span>/12)</h2>
+                <div id="roster-list-container"></div>
+                 <!-- Placeholder for adding equipment UI later -->
+            </div>
+        </div>
+    </div>
+
+    <div id="game-tracker-view" style="display: none;">
+        <header id="game-state-dashboard">
+            <div class="control-group">
+                <strong>Turning Point:</strong>
+                <span id="turn-value" class="state-value">1</span>
+            </div>
+            <div class="control-group">
+                <strong>Command Points:</strong>
+                <button class="cp-mod" data-amount="-1">-</button>
+                <span id="cp-value" class="state-value">2</span>
+                <button class="cp-mod" data-amount="1">+</button>
+            </div>
+            <div class="control-group">
+                <strong>Victory Points:</strong>
+                <button class="vp-mod" data-amount="-1">-</button>
+                <span id="vp-value" class="state-value">0</span>
+                <button class="vp-mod" data-amount="1">+</button>
+            </div>
+            <div class="control-group">
+                <strong>Initiative:</strong>
+                <span id="initiative-holder" class="state-value">-</span>
+            </div>
+             <button id="ready-all-btn">Ready All & Next Turn</button>
+        </header>
+
+        <div id="reference-panel">
+            <!-- Accordions will be generated here by JS -->
+        </div>
+
+        <div id="active-operative-cards">
+            <!-- Operative cards will be generated here by JS -->
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
