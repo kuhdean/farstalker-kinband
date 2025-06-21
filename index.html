@@ -45,27 +45,36 @@
 
     <div id="game-tracker-view" style="display: none;">
         <header id="game-state-dashboard">
-            <div class="control-group">
+            <div class="control-widget">
                 <strong>Turning Point:</strong>
-                <span id="turn-value" class="state-value">1</span>
+                <div class="value-controls">
+                    <span id="turn-value" class="state-value">1</span>
+                </div>
             </div>
-            <div class="control-group">
+            <div class="control-widget">
                 <strong>Command Points:</strong>
-                <button class="cp-mod" data-amount="-1">-</button>
-                <span id="cp-value" class="state-value">2</span>
-                <button class="cp-mod" data-amount="1">+</button>
+                <div class="value-controls">
+                    <button class="cp-mod" data-amount="-1">-</button>
+                    <span id="cp-value" class="state-value">2</span>
+                    <button class="cp-mod" data-amount="1">+</button>
+                    <span id="cp-message" class="cp-message"></span>
+                </div>
             </div>
-            <div class="control-group">
+            <div class="control-widget">
                 <strong>Victory Points:</strong>
-                <button class="vp-mod" data-amount="-1">-</button>
-                <span id="vp-value" class="state-value">0</span>
-                <button class="vp-mod" data-amount="1">+</button>
+                <div class="value-controls">
+                    <button class="vp-mod" data-amount="-1">-</button>
+                    <span id="vp-value" class="state-value">0</span>
+                    <button class="vp-mod" data-amount="1">+</button>
+                </div>
             </div>
-            <div class="control-group">
+            <div class="control-widget">
                 <strong>Initiative:</strong>
-                <span id="initiative-holder" class="state-value">-</span>
+                <div class="value-controls">
+                    <span id="initiative-holder" class="state-value">-</span>
+                </div>
             </div>
-             <button id="ready-all-btn">Ready All & Next Turn</button>
+            <button id="ready-all-btn">Ready All & Next Turn</button>
         </header>
         <div id="game-tracker-main-content-grid">
             <div id="chosen-equipment-display-area" class="grid-item">

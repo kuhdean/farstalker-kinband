@@ -4,39 +4,44 @@
 /* --- GENERAL & LAYOUT --- */
 :root {
     /* Base & Accents */
-    --app-bg: #0A0A0A; /* Dark background */
-    --card-bg-main: #1A1A1A; /* Card surface */
-    --card-border-color: var(--accent-color-primary); /* Border uses primary accent */
+    /* Core Palette */
+    --app-bg: #0D0C14; /* Deep, dark purple-blue */
+    --card-bg-main: #1A1826; /* Slightly lighter card surface */
+    --card-border-color: #4D4A6D; /* Muted purple-grey border */
     --card-border-light: #222222; /* Subtle divider */
-    --card-header-bg: #111111; /* Header background */
-    --card-header-text: #FFFFFF; /* Light header text */
-    --card-section-bg: #222222; /* Section background */
+    --card-header-bg: #100F1A;
+    --card-header-text: #E2E1F0;
+    --card-section-bg: #1A1826;
 
-    --text-color-primary: #E0E0E0; /* Main text */
-    --text-color-secondary: #AAAAAA; /* Secondary info */
-    --text-color-subtle: #777777; /* Tertiary info */
+    /* Text Palette */
+    --text-color-primary: #E2E1F0;
+    --text-color-secondary: #A09EC7;
+    --text-color-subtle: #6A678F;
 
-    --accent-color-primary: #0077FF; /* Retro blue */
-    --accent-color-secondary: #58AFFF; /* Lighter blue accent */
+    /* Accent Palette */
+    --accent-color-primary: #00FFFF; /* Electric Cyan */
+    --accent-color-secondary: #FF00FF; /* Vibrant Magenta */
+    --accent-color-tertiary: #FFFF00; /* Bright Yellow */
+    --accent-color-primary-rgb: 0,255,255;
 
     /* UI Elements */
     --button-bg: transparent;
-    --button-bg-hover: rgba(0,119,255,0.1);
+    --button-bg-hover: rgba(0,255,255,0.1);
     --button-border-color: var(--accent-color-primary);
     --button-text-color: var(--accent-color-primary);
 
     --ready-color: var(--accent-color-primary);
-    --activated-color: #555555; /* Muted grey */
-    --injured-color-val: #FFD700; /* Retro yellow */
-    --injured-color-border: #C0392B;
+    --activated-color: #555555;
+    --injured-color-val: var(--accent-color-tertiary);
+    --injured-color-border: #E53935;
 
 
     --health-bar-full: var(--accent-color-primary);
-    --health-bar-injured: var(--injured-color-val);
-    --health-bar-critical: #FF5555;
+    --health-bar-injured: var(--accent-color-tertiary);
+    --health-bar-critical: var(--accent-color-secondary);
     --health-bar-background: #333333;
 
-    --keyword-highlight-color: var(--accent-color-secondary); /* Keyword highlight */
+    --keyword-highlight-color: var(--accent-color-primary);
     --tooltip-bg: var(--card-header-bg);
     --tooltip-text: var(--card-header-text);
 
@@ -50,7 +55,7 @@
     --unique-tag-text: #000000;
 
     /* Shadows */
-    --card-shadow: none;
+    --card-shadow: 0 0 15px rgba(0,0,0,0.5), 0 0 5px rgba(var(--accent-color-primary-rgb),0.2);
 
     /* Validation message colours */
     --valid-message-color: lightgreen; /* Original */
@@ -73,31 +78,38 @@ body::after {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(rgba(0,0,0,0.05) 50%, rgba(0,0,0,0.1) 50%);
+    background: linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.25) 50%);
     background-size: 100% 4px;
-    opacity: 0.2;
+    z-index: 1001;
     pointer-events: none;
-    z-index: 1000;
+    animation: scanline 10s linear infinite;
+}
+
+@keyframes scanline {
+    from { background-position: 0 0; }
+    to { background-position: 0 -40px; }
 }
 
 header { background-color: var(--card-header-bg); color: var(--card-header-text); padding: 15px 25px; margin-bottom: 20px; border: 1px solid var(--accent-color-primary); box-shadow: var(--card-shadow); display: flex; justify-content: space-between; align-items: center; }
-h1, h2, h3 { margin-top: 0; margin-bottom: 0.5em; font-family: 'VT323', monospace; text-shadow: none; }
+h1, h2, h3 { margin-top: 0; margin-bottom: 0.5em; font-family: 'VT323', monospace; text-shadow: 0 0 3px var(--accent-color-primary); }
+h1 { font-size: 2.5em; }
+h2 { font-size: 2em; }
 h4, h5 { margin-top: 0; margin-bottom: 0.5em; font-family: 'Inter', sans-serif; text-shadow: none; }
 .header-actions { display: flex; gap: 10px; }
 button {
     cursor: pointer;
     border-radius: 2px;
     border: 1px solid var(--button-border-color);
-    background-color: var(--button-bg);
+    background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(0,0,0,0.05));
     color: var(--button-text-color);
     padding: 8px 12px;
     font-weight: bold;
     transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: inset 0 0 1px 1px rgba(255,255,255,0.1), 0 0 5px rgba(0,0,0,0.4);
 }
 button:hover {
-    background-color: var(--accent-color-primary);
+    background: linear-gradient(145deg, rgba(var(--accent-color-primary-rgb),0.2), rgba(var(--accent-color-primary-rgb),0.05));
     color: #000;
-    box-shadow: none;
 }
 .view-container { display: flex; gap: 20px; }
 #available-operatives-pool, #your-roster-list {
@@ -161,6 +173,9 @@ button:hover {
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: 10px;
     padding: 5px;
+    background-image: linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
+                      linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
+    background-size: 16px 16px;
 }
 
 .operative-tile,
@@ -272,8 +287,22 @@ button:hover {
 
 
 /* --- GAME TRACKER DASHBOARD --- */
-#game-state-dashboard .control-group { display: flex; align-items: center; gap: 10px; }
-#game-state-dashboard .state-value { font-size: 1.5em; font-weight: bold; min-width: 30px; text-align: center; }
+#game-state-dashboard .control-widget {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 8px;
+    border: 1px solid var(--accent-color-primary);
+    background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(0,0,0,0.1));
+    box-shadow: var(--card-shadow);
+    margin-right: 10px;
+}
+#game-state-dashboard .state-value {
+    font-size: 1.5em;
+    font-weight: bold;
+    min-width: 30px;
+    text-align: center;
+}
 #game-state-dashboard button {
     background-color: var(--accent-color-primary);
     color: #000;
@@ -283,6 +312,11 @@ button:hover {
     background-color: var(--accent-color-secondary);
     border-color: var(--accent-color-secondary);
     color: #000;
+}
+#game-state-dashboard .value-controls {
+    display: flex;
+    align-items: center;
+    gap: 4px;
 }
 
 /* --- GAME TRACKER: GRID & CARD LAYOUT --- */
@@ -452,12 +486,13 @@ button:hover {
 }
 
 .card-header {
-    background-color: var(--card-header-bg);
+    background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(0,0,0,0.1));
     color: var(--card-header-text);
     padding: 10px;
     display: flex;
     flex-direction: column;
     align-items: stretch;
+    box-shadow: inset 0 -1px 2px rgba(0,0,0,0.5);
 }
 
 .card-title-area {
@@ -610,7 +645,7 @@ button:hover {
     opacity: 0.7;
 }
 
-.card-body h4, .card-body h5 { /* Section Titles */
+.card-body h4, .card-body h5 {
     font-size: 0.8em;
     font-weight: 700;
     text-transform: uppercase;
@@ -619,7 +654,11 @@ button:hover {
     margin-top: 8px;
     margin-bottom: 4px;
     padding-bottom: 4px;
-    border-bottom: 1px solid var(--accent-color-primary);
+    border-bottom: 1px solid transparent;
+    background-image: linear-gradient(to right, var(--accent-color-primary), transparent);
+    background-repeat: no-repeat;
+    background-size: 100% 1px;
+    background-position: bottom left;
 }
 .card-body h5 { /* For Equipment, slightly less emphasis */
     font-size: 0.75em;
@@ -675,10 +714,10 @@ button:hover {
     /* opacity: 0.75; */ /* Consider if too much with button state, currently handled by button style */
 }
 .operative-card.is-injured {
-    border-left: 4px solid var(--injured-color-border); /* Distinct left border for injury */
+    border-left: 6px solid var(--injured-color-border);
 }
-.operative-card.is-wounded { /* If not injured but damaged */
-     border-left: 4px solid var(--injured-color-val); /* Use the yellowish color */
+.operative-card.is-wounded {
+     border-left: 6px solid var(--injured-color-val);
 }
 .operative-card.is-incapacitated {
     border: 1px solid var(--text-color-subtle);
@@ -711,4 +750,19 @@ button:hover {
     line-height: 1.4;
     pointer-events: none;
     box-shadow: var(--card-shadow);
+}
+
+.cp-message {
+    font-size: 0.75em;
+    color: var(--accent-color-secondary);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.cp-message.flash {
+    opacity: 1;
+}
+
+.ploy-button.ploy-flash {
+    background-color: var(--accent-color-secondary);
+    color: #000;
 }
