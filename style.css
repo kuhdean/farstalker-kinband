@@ -359,6 +359,15 @@ button:hover {
     grid-column: 1 / -1;
 }
 
+/* Let reference sections span full width like the equipment section */
+#faction-rules-accordion-container,
+#strategic-ploys-accordion-container,
+#firefight-ploys-accordion-container,
+#faction-equipment-accordion-container,
+#universal-equipment-accordion-container {
+    grid-column: 1 / -1;
+}
+
 #chosen-equipment-card-container {
     display: flex;
     flex-wrap: wrap;
