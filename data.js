@@ -13,7 +13,11 @@ const keywordGlossary = {
     "Salvo": "Select up to two valid targets. Shoot with this weapon against both of them in an order of your choice (roll each sequence separately).",
     "Silent": "An operative can perform a Shoot action with this weapon while it has a Conceal order.",
     "Stun": "If you score any critical hits, subtract 1 from the target's APL for its next activation.",
-    "Torrent X\"": "This weapon makes a shooting attack against the primary target and every other operative within X\" of it and within this weapon's range."
+    "Torrent X\"": "This weapon makes a shooting attack against the primary target and every other operative within X\" of it and within this weapon's range.",
+    "Relentless": "You can re-roll any of your attack dice.",
+    "Seek": "When selecting a valid target, operatives with a Conceal order cannot use terrain for cover. If the rule is Seek Light, they cannot use Light terrain for cover. While this can allow operatives to be targeted (if visible), it doesn’t remove their cover save.",
+    "Seek Light": "Operatives with a Conceal order cannot use Light terrain for cover when selected as a valid target.",
+    "Severe": "If you don’t retain any critical successes, you can change one of your normal successes to a critical success. Any rules that take effect as a result of retaining a critical success still do."
 };
 
 const factionRules = [
