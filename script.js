@@ -322,29 +322,21 @@ function renderDashboard() {
 }
 
 function renderReferenceAccordions() {
-    const makeAccordion = (title, items, isPloy) => {
+    const makeSection = (title, items, isPloy) => {
         const listItems = items.map(item => {
             if (isPloy) {
                 return `<li><button class="ploy-button" data-ploy-name="${item.name}" data-cp-cost="${item.cp}">${item.name} (${item.cp}CP)</button><div class="ploy-text">${parseKeywords(item.text)}</div></li>`;
             }
             return `<li><strong>${item.name}${item.cp ? ` (${item.cp}CP)` : ''}:</strong> ${parseKeywords(item.text)}</li>`;
         }).join('');
-        return `<div><button class="accordion">${title}</button><div class="accordion-content"><ul>${listItems}</ul></div></div>`;
+        return `<h3>${title}</h3><ul class="reference-list">${listItems}</ul>`;
     };
 
-    factionRulesAccordionContainer.innerHTML = makeAccordion('Faction Rules', factionRules);
-    strategicPloysAccordionContainer.innerHTML = makeAccordion('Strategic Ploys', strategicPloys, true);
-    firefightPloysAccordionContainer.innerHTML = makeAccordion('Firefight Ploys', firefightPloys, true);
-    factionEquipmentAccordionContainer.innerHTML = makeAccordion('Faction Equipment', factionEquipment);
-    universalEquipmentAccordionContainer.innerHTML = makeAccordion('Universal Equipment', universalEquipment);
-
-    document.querySelectorAll('.accordion').forEach(button => {
-        button.addEventListener('click', function() {
-            this.classList.toggle('active');
-            const content = this.nextElementSibling;
-            content.style.maxHeight = content.style.maxHeight ? null : content.scrollHeight + "px";
-        });
-    });
+    factionRulesAccordionContainer.innerHTML = makeSection('Faction Rules', factionRules);
+    strategicPloysAccordionContainer.innerHTML = makeSection('Strategic Ploys', strategicPloys, true);
+    firefightPloysAccordionContainer.innerHTML = makeSection('Firefight Ploys', firefightPloys, true);
+    factionEquipmentAccordionContainer.innerHTML = makeSection('Faction Equipment', factionEquipment);
+    universalEquipmentAccordionContainer.innerHTML = makeSection('Universal Equipment', universalEquipment);
 }
 
 function renderChosenEquipmentCards() {
