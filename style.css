@@ -62,7 +62,7 @@
 
 body {
     background-color: var(--app-bg);
-    font-family: 'Roboto Mono', monospace;
+    font-family: 'Inter', sans-serif;
     color: var(--text-color-primary);
     margin: 0; padding: 20px;
 }
@@ -197,7 +197,7 @@ button:hover {
 
 .operative-tile strong,
 .equipment-tile strong {
-    font-family: 'Roboto Mono', monospace;
+    font-family: 'Inter', sans-serif;
     font-size: 0.9em;
     color: var(--text-color-primary);
     display: block;
@@ -341,7 +341,7 @@ button:hover {
     line-height: 1.4;
 }
 .chosen-equipment-card strong {
-    font-family: 'Roboto Mono', monospace;
+    font-family: 'Inter', sans-serif;
     color: var(--accent-color-primary);
     display: block;
     margin-bottom: 5px;
@@ -431,10 +431,17 @@ button:hover {
 .card-header {
     background-color: var(--card-header-bg);
     color: var(--card-header-text);
-    padding: 8px 12px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.card-title-area {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 8px;
 }
 
 .card-title-area h3 {
@@ -477,9 +484,9 @@ button:hover {
     display: grid; /* Use grid for easy alignment */
     grid-template-columns: repeat(4, 1fr); /* Four stats */
     gap: 3px;
-    padding: 6px 8px;
-    background-color: var(--card-section-bg);
-    border-bottom: 1px solid var(--accent-color-primary);
+    padding: 4px 0 0 0;
+    background-color: transparent;
+    border-bottom: none;
     text-align: center;
 }
 
@@ -586,7 +593,7 @@ button:hover {
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: var(--text-color-secondary);
-    margin-top: 10px;
+    margin-top: 8px;
     margin-bottom: 4px;
     padding-bottom: 4px;
     border-bottom: 1px solid var(--accent-color-primary);
@@ -598,7 +605,7 @@ button:hover {
 .weapon-table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     font-size: 0.75em; /* Denser table text */
 }
 .weapon-table th, .weapon-table td {
@@ -624,7 +631,7 @@ button:hover {
 }
 .ability-list li, .action-list li {
     margin-bottom: 0; /* Let padding handle spacing */
-    padding: 3px 2px; /* Add some vertical padding */
+    padding: 3px 0;
     border-bottom: 1px dotted var(--accent-color-primary);
 }
 .ability-list li:last-child, .action-list li:last-child {

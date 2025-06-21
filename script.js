@@ -408,14 +408,11 @@ function renderAllOperativeCards() {
                     <h3>${op.name}</h3>
                     ${tagsHTML ? `<div class="operative-tags-container">${tagsHTML}</div>` : ''}
                 </div>
-                <div class="status-icon-tray"></div> <!-- For future status icons -->
-            </div>
-
-            <div class="operative-core-stats">
-                <div class="core-stat">
-                    <span class="core-stat-label">APL</span>
-                    <span class="core-stat-value">${op.stats.apl}${isInjured ? `<span class="stat-modifier">(${modifiedAPLDisplay})</span>` : ''}</span>
-                </div>
+                <div class="operative-core-stats">
+                    <div class="core-stat">
+                        <span class="core-stat-label">APL</span>
+                        <span class="core-stat-value">${op.stats.apl}${isInjured ? `<span class="stat-modifier">(${modifiedAPLDisplay})</span>` : ''}</span>
+                    </div>
                 <div class="core-stat">
                     <span class="core-stat-label">Move</span>
                     <span class="core-stat-value">${op.stats.move}${isInjured ? `<span class="stat-modifier">(${modifiedMoveDisplay})</span>` : ''}</span>
@@ -428,9 +425,10 @@ function renderAllOperativeCards() {
                     <span class="core-stat-label">Wounds</span>
                     <span class="core-stat-value">${op.stats.wounds}</span>
                 </div>
+                </div>
             </div>
-            
-            <div class="card-body"> <!-- Moved controls and main content into card-body -->
+
+            <div class="card-body">
                 <div class="health-bar" data-id="${op.instanceId}">
                     <div class="health-bar-fill"></div>
                     <div class="health-bar-text">${op.currentWounds} / ${op.stats.wounds}</div>
