@@ -81,6 +81,9 @@ function renderOperativeSelectionGrid() {
         const tile = document.createElement('div');
         tile.classList.add('operative-tile');
         tile.innerHTML = `<strong>${opData.name}</strong>${opData.isLeader ? ' <span class="leader-tag">Leader</span>' : ''}`;
+        if (activeRoster.some(op => op.id === opData.id)) {
+            tile.classList.add('selected');
+        }
         const validation = validateRosterAddition(opData);
         if (!validation.isValid) {
             tile.classList.add('disabled');
@@ -97,7 +100,10 @@ function renderEquipmentSelectionGrid() {
     allEquip.forEach(eq => {
         const tile = document.createElement('div');
         tile.classList.add('equipment-tile');
-        tile.innerHTML = `<strong>${eq.name}</strong> (${eq.epCost}EP)<div><small>${parseKeywords(eq.text)}</small></div>`;
+        tile.innerHTML = `<strong>${eq.name}</strong><span class="ep-cost-display">${eq.epCost}EP</span><div class="tile-rules-snippet">${parseKeywords(eq.text)}</div>`;
+        if (killTeamEquipment.some(e => e.name === eq.name)) {
+            tile.classList.add('selected');
+        }
         const inRoster = killTeamEquipment.some(e => e.name === eq.name);
         const epExceeded = gameState.spentEp + eq.epCost > gameState.totalEp;
         const itemLimit = killTeamEquipment.length >= MAX_EQUIPMENT_ITEMS;
