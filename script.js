@@ -24,6 +24,7 @@ const factionEquipmentAccordionContainer = document.getElementById('faction-equi
 const universalEquipmentAccordionContainer = document.getElementById('universal-equipment-accordion-container');
 const turnValueSpan = document.getElementById('turn-value');
 const cpValueSpan = document.getElementById('cp-value');
+const cpMessageSpan = document.getElementById('cp-message');
 const vpValueSpan = document.getElementById('vp-value');
 const readyAllBtn = document.getElementById('ready-all-btn');
 const initiativeHolderSpan = document.getElementById('initiative-holder');
@@ -510,7 +511,19 @@ function usePloy(name, cpCost, buttonEl) {
     saveState();
     if (buttonEl) {
         buttonEl.disabled = true;
-        setTimeout(() => { buttonEl.disabled = false; }, 500);
+        buttonEl.classList.add('ploy-flash');
+        setTimeout(() => {
+            buttonEl.classList.remove('ploy-flash');
+            buttonEl.disabled = false;
+        }, 500);
+    }
+    if (cpMessageSpan) {
+        cpMessageSpan.textContent = `-${cpCost}CP`;
+        cpMessageSpan.classList.add('flash');
+        setTimeout(() => {
+            cpMessageSpan.classList.remove('flash');
+            cpMessageSpan.textContent = '';
+        }, 600);
     }
 }
 
