@@ -28,7 +28,6 @@ const vpValueSpan = document.getElementById('vp-value');
 const readyAllBtn = document.getElementById('ready-all-btn');
 const initiativeHolderSpan = document.getElementById('initiative-holder');
 const resetRosterBtn = document.getElementById('reset-roster-btn');
-const equipmentModal = document.getElementById('equipment-modal');
 const chosenKillTeamEquipmentList = document.getElementById('chosen-kill-team-equipment-list');
 const epSpentUI = document.getElementById('ep-spent-ui');
 const equipmentSelectedCount = document.getElementById('equipment-selected-count');
@@ -170,8 +169,7 @@ function addOperativeToRoster(opId) {
         instanceId: Date.now() + Math.random(),
         currentWounds: opData.stats.wounds,
         isActivated: false,
-        order: 'Conceal',
-        chosenEquipment: []
+        order: 'Conceal'
     };
     activeRoster.push(opInstance);
     renderRosterList();
@@ -183,10 +181,6 @@ function addOperativeToRoster(opId) {
 }
 
 function removeOperativeFromRoster(instanceId) {
-    const operativeToRemove = activeRoster.find(op => op.instanceId == instanceId);
-    if (operativeToRemove && operativeToRemove.chosenEquipment.length > 0) {
-        // Equipment removal no longer adjusts EP
-    }
     activeRoster = activeRoster.filter(op => op.instanceId != instanceId);
     renderRosterList();
     renderOperativeSelectionGrid();
@@ -200,14 +194,11 @@ function renderRosterList() {
     activeRoster.forEach(op => {
         const item = document.createElement('div');
         item.classList.add('roster-item');
-        const eqList = op.chosenEquipment.map(eq => eq.name).join(', ');
         item.innerHTML = `
             <div>
                 <span>${op.name}</span>
-                ${eqList ? `<div class="roster-item-equipment">${eqList}</div>` : ''}
             </div>
             <div>
-                <button class="equip-op-btn" data-id="${op.instanceId}">Equip</button>
                 <button class="remove-op-btn" data-id="${op.instanceId}">X</button>
             </div>`;
         item.querySelector('.remove-op-btn').addEventListener('click', () => removeOperativeFromRoster(op.instanceId));
@@ -217,57 +208,6 @@ function renderRosterList() {
 }
 
 
-function openEquipmentModal(instanceId) {
-    const operative = activeRoster.find(op => op.instanceId == instanceId);
-    if (!operative) return;
-
-    let availableHTML = factionEquipment.map(eq => {
-        const disabled = (operative.id === 'hound' && (eq.name === 'Meat' || eq.name === 'Trophy')) ||
-                         operative.chosenEquipment.some(e => e.name === eq.name);
-        return `<li class="equip-item">${eq.name} <button class="add-eq-btn" data-id="${instanceId}" data-eq="${eq.name}" ${disabled ? 'disabled' : ''}>Add</button><div><small>${parseKeywords(eq.text)}</small></div></li>`;
-    }).join('');
-
-    let chosenHTML = operative.chosenEquipment.map(eq => `<li class="equip-item">${eq.name} <button class="remove-eq-btn" data-id="${instanceId}" data-eq="${eq.name}">Remove</button></li>`).join('');
-    if (!chosenHTML) chosenHTML = '<li class="equip-item"><em>None</em></li>';
-
-    equipmentModal.innerHTML = `<div class="modal-content">
-        <h3>Equip ${operative.name}</h3>
-        <h4>Available</h4>
-        <ul>${availableHTML}</ul>
-        <h4>Chosen</h4>
-        <ul>${chosenHTML}</ul>
-        <button class="close-modal">Close</button>
-    </div>`;
-    equipmentModal.style.display = 'flex';
-}
-
-function closeEquipmentModal() {
-    equipmentModal.style.display = 'none';
-    equipmentModal.innerHTML = '';
-}
-
-function addEquipmentToOperative(instanceId, eqName) {
-    const operative = activeRoster.find(op => op.instanceId == instanceId);
-    const eqData = factionEquipment.find(eq => eq.name === eqName);
-    if (!operative || !eqData) return;
-    if (operative.id === 'hound' && (eqName === 'Meat' || eqName === 'Trophy')) return;
-    if (operative.chosenEquipment.some(eq => eq.name === eqName)) return;
-    operative.chosenEquipment.push(eqData);
-    renderRosterList();
-    saveState();
-    openEquipmentModal(instanceId);
-}
-
-function removeEquipmentFromOperative(instanceId, eqName) {
-    const operative = activeRoster.find(op => op.instanceId == instanceId);
-    if (!operative) return;
-    const index = operative.chosenEquipment.findIndex(eq => eq.name === eqName);
-    if (index === -1) return;
-    operative.chosenEquipment.splice(index, 1);
-    renderRosterList();
-    saveState();
-    openEquipmentModal(instanceId);
-}
 
 function validateRosterAddition(opData) {
     if (activeRoster.length >= 12) return { isValid: false, message: 'Roster is full (12 operatives max).' };
@@ -392,9 +332,20 @@ function renderAllOperativeCards() {
 
         const abilitiesHTML = op.abilities.map(a => `<li><strong>${a.name}:</strong> ${parseKeywords(a.text)}</li>`).join('');
         const actionsHTML = (op.uniqueActions || []).map(a => `<li><strong>${a.name}:</strong> ${parseKeywords(a.text)}</li>`).join('');
-        const equipmentHTML = op.chosenEquipment.map(eq => `<li><small><em>${eq.name}</em></small></li>`).join('');
 
-        card.innerHTML = `
+        const contextActions = [];
+        killTeamEquipment.forEach(eq => {
+            let eligible = true;
+            if (eq.ineligible_ids && eq.ineligible_ids.includes(op.id)) eligible = false;
+            if (eligible && eq.eligible_weapons) {
+                const weaponNames = op.weapons.map(w => w.name);
+                eligible = eq.eligible_weapons.some(w => weaponNames.includes(w));
+            }
+            if (eligible) contextActions.push(eq.name);
+        });
+        const contextButtonsHTML = contextActions.map(n => `<button class="context-btn">${n}</button>`).join('');
+
+        const mainContent = `
             <div class="card-header">
                 <div class="card-title-area">
                     <h3>${op.name}</h3>
@@ -434,8 +385,14 @@ function renderAllOperativeCards() {
                 ${weaponsHTML ? `<h4>Weapons</h4><table class="weapon-table"><thead><tr><th>Name</th><th>A</th><th>HIT</th><th>D</th><th>Rules</th></tr></thead><tbody>${weaponsHTML}</tbody></table>` : ''}
                 ${abilitiesHTML ? `<h4>Abilities</h4><ul class="ability-list">${abilitiesHTML}</ul>` : ''}
                 ${actionsHTML ? `<h4>Unique Actions</h4><ul class="action-list">${actionsHTML}</ul>` : ''}
-                ${equipmentHTML ? `<h5>Equipment</h5><ul class="ability-list">${equipmentHTML}</ul>` : ''}
             </div>
+        `;
+
+        const contextHTML = contextButtonsHTML ? `<h4>Actions</h4>${contextButtonsHTML}` : '';
+
+        card.innerHTML = `
+            <div class="op-card-main-content">${mainContent}</div>
+            <div class="op-card-context-bar" id="contextual-actions-${op.instanceId}">${contextHTML}</div>
         `;
         activeCardsContainer.appendChild(card);
         updateCardVisualState(op.instanceId); // Ensure this is called
@@ -592,10 +549,7 @@ function bindStaticEventListeners() {
         else if (target.matches('.order-toggle')) toggleOrder(target.dataset.id);
         else if (target.matches('.activation-status')) toggleActivation(target.dataset.id);
         else if (target.matches('.health-bar')) handleHealthClick(target.dataset.id, e);
-        else if (target.matches('.equip-op-btn')) openEquipmentModal(target.dataset.id);
-        else if (target.matches('.add-eq-btn')) addEquipmentToOperative(target.dataset.id, target.dataset.eq);
-        else if (target.matches('.remove-eq-btn')) removeEquipmentFromOperative(target.dataset.id, target.dataset.eq);
-        else if (target.matches('.close-modal')) closeEquipmentModal();
+        
         else if (target.matches('.ploy-button')) usePloy(target.dataset.ployName, parseInt(target.dataset.cpCost), target);
         else if (target.matches('.keyword')) showTooltip(target.textContent, e);
         else if (!target.closest('.keyword')) removeTooltip();
