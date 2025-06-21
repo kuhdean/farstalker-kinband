@@ -100,7 +100,7 @@ function renderEquipmentSelectionGrid() {
     allEquip.forEach(eq => {
         const tile = document.createElement('div');
         tile.classList.add('equipment-tile');
-        tile.innerHTML = `<strong>${eq.name}</strong><span class="ep-cost-display">${eq.epCost}EP</span><div class="tile-rules-snippet">${parseKeywords(eq.text)}</div>`;
+        tile.innerHTML = `<strong>${eq.name}</strong><span class="ep-cost-display">${eq.epCost}EP</span><div class="tile-rules-snippet">${parseKeywords(eq.flavorText)}</div>`;
         if (killTeamEquipment.some(e => e.name === eq.name)) {
             tile.classList.add('selected');
         }
@@ -276,18 +276,40 @@ function renderReferenceAccordions() {
     factionRulesAccordionContainer.innerHTML = makeSection('Faction Rules', factionRules);
     strategicPloysAccordionContainer.innerHTML = makeSection('Strategic Ploys', strategicPloys, true);
     firefightPloysAccordionContainer.innerHTML = makeSection('Firefight Ploys', firefightPloys, true);
-    factionEquipmentAccordionContainer.innerHTML = makeSection('Faction Equipment', factionEquipment);
-    universalEquipmentAccordionContainer.innerHTML = makeSection('Universal Equipment', universalEquipment);
+    const selectedFactionEq = killTeamEquipment.filter(eq => factionEquipment.some(f => f.name === eq.name));
+    const selectedUniversalEq = killTeamEquipment.filter(eq => universalEquipment.some(u => u.name === eq.name));
+
+    factionEquipmentAccordionContainer.innerHTML = makeSection('Faction Equipment', selectedFactionEq);
 }
 
 function renderChosenEquipmentCards() {
     if (!chosenEquipmentCardContainer) return;
     chosenEquipmentCardContainer.innerHTML = '';
+
     killTeamEquipment.forEach(eq => {
-        const div = document.createElement('div');
-        div.classList.add('chosen-equipment-card');
-        div.innerHTML = `<strong>${eq.name}</strong> (${eq.epCost}EP)<div><small>${parseKeywords(eq.text)}</small></div>`;
-        chosenEquipmentCardContainer.appendChild(div);
+        const card = document.createElement('div');
+        card.classList.add('chosen-equipment-card');
+
+        const rulesHTML = (eq.rules || []).map(rule => `<p>${parseKeywords(rule)}</p>`).join('');
+
+        const actionsHTML = (eq.uniqueActions || []).map(action => {
+            return `<div class="equipment-action"><strong>${action.name}</strong><p>${parseKeywords(action.text)}</p></div>`;
+        }).join('');
+
+        const weaponsHTML = (eq.weaponProfiles || []).map(w => {
+            return `<tr><td>${w.name}</td><td>${w.atk}</td><td>${w.skill}</td><td>${w.dmg}</td><td>${parseKeywords(w.rules)}</td></tr>`;
+        }).join('');
+
+        const cardHTML = `
+            <strong>${eq.name} (${eq.epCost}EP)</strong>
+            ${eq.flavorText ? `<em class="equipment-flavor-text">${eq.flavorText}</em>` : ''}
+            <div class="equipment-rules">${rulesHTML}</div>
+            ${actionsHTML ? `<h4>Actions</h4>${actionsHTML}` : ''}
+            ${weaponsHTML ? `<h4>Profiles</h4><table class="weapon-table"><thead><tr><th>Name</th><th>A</th><th>HIT</th><th>D</th><th>Rules</th></tr></thead><tbody>${weaponsHTML}</tbody></table>` : ''}
+        `;
+
+        card.innerHTML = cardHTML;
+        chosenEquipmentCardContainer.appendChild(card);
     });
 }
 
