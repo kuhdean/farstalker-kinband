@@ -6,7 +6,7 @@
     /* Base & Accents */
     --app-bg: #0A0A0A; /* Dark background */
     --card-bg-main: #1A1A1A; /* Card surface */
-    --card-border-color: #39FF14; /* Neon green borders */
+    --card-border-color: var(--accent-color-primary); /* Border uses primary accent */
     --card-border-light: #222222; /* Subtle divider */
     --card-header-bg: #111111; /* Header background */
     --card-header-text: #FFFFFF; /* Light header text */
@@ -16,12 +16,12 @@
     --text-color-secondary: #AAAAAA; /* Secondary info */
     --text-color-subtle: #777777; /* Tertiary info */
 
-    --accent-color-primary: #39FF14; /* Neon green */
-    --accent-color-secondary: #00FFFF; /* Cyan accent */
+    --accent-color-primary: #00BFFF; /* Retro blue */
+    --accent-color-secondary: #4DFFFF; /* Lighter blue accent */
 
     /* UI Elements */
     --button-bg: transparent;
-    --button-bg-hover: rgba(57,255,20,0.1);
+    --button-bg-hover: rgba(0,191,255,0.1);
     --button-border-color: var(--accent-color-primary);
     --button-text-color: var(--accent-color-primary);
 
@@ -36,7 +36,7 @@
     --health-bar-critical: #FF5555;
     --health-bar-background: #333333;
 
-    --keyword-highlight-color: #00FFFF; /* Cyan keywords */
+    --keyword-highlight-color: var(--accent-color-secondary); /* Keyword highlight */
     --tooltip-bg: var(--card-header-bg);
     --tooltip-text: var(--card-header-text);
 
@@ -50,7 +50,7 @@
     --unique-tag-text: #000000;
 
     /* Shadows */
-    --card-shadow: 0 0 8px rgba(57,255,20,0.4);
+    --card-shadow: 0 0 8px rgba(0,191,255,0.4);
 
     /* Validation message colours */
     --valid-message-color: lightgreen; /* Original */
@@ -81,7 +81,7 @@ body::after {
 }
 
 header { background-color: var(--card-header-bg); color: var(--card-header-text); padding: 15px 25px; margin-bottom: 20px; border: 1px solid var(--accent-color-primary); box-shadow: var(--card-shadow); display: flex; justify-content: space-between; align-items: center; }
-h1, h2, h3, h4, h5 { margin-top: 0; margin-bottom: 0.5em; font-family: 'VT323', monospace; text-shadow: 0 0 5px var(--accent-color-primary); }
+h1, h2, h3, h4, h5 { margin-top: 0; margin-bottom: 0.5em; font-family: 'VT323', monospace; text-shadow: 0 0 2px var(--accent-color-primary); }
 .header-actions { display: flex; gap: 10px; }
 button {
     cursor: pointer;
@@ -89,7 +89,7 @@ button {
     border: 1px solid var(--button-border-color);
     background-color: var(--button-bg);
     color: var(--button-text-color);
-    padding: 10px 15px;
+    padding: 8px 12px;
     font-weight: bold;
     transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -148,7 +148,7 @@ button:hover {
 .selection-category h3 {
     font-family: 'VT323', monospace;
     color: var(--accent-color-primary);
-    text-shadow: 0 0 3px var(--accent-color-primary);
+    text-shadow: 0 0 2px var(--accent-color-primary);
     margin-bottom: 10px;
     border-bottom: 1px solid var(--accent-color-primary);
     padding-bottom: 5px;
@@ -179,8 +179,8 @@ button:hover {
 
 .operative-tile:hover,
 .equipment-tile:hover {
-    background-color: rgba(57, 255, 20, 0.05);
-    box-shadow: 0 0 8px rgba(57,255,20,0.6);
+    background-color: rgba(0, 191, 255, 0.05);
+    box-shadow: 0 0 8px rgba(0,191,255,0.6);
 }
 
 .operative-tile.disabled,
@@ -312,7 +312,7 @@ button:hover {
 .grid-item h3 {
     font-family: 'VT323', monospace;
     color: var(--accent-color-primary);
-    text-shadow: 0 0 3px var(--accent-color-primary);
+    text-shadow: 0 0 2px var(--accent-color-primary);
     margin-bottom: 10px;
     border-bottom: 1px solid var(--accent-color-primary);
     padding-bottom: 5px;
@@ -414,8 +414,8 @@ button:hover {
 /* --- OPERATIVE CARD STYLES (NEW/UPDATED) --- */
 #active-operative-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); /* Slightly narrower min-width */
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 15px;
 }
 
 .operative-card {
@@ -439,18 +439,18 @@ button:hover {
 
 .card-title-area h3 {
     margin: 0;
-    font-size: 1.25em;
+    font-size: 1.15em;
     font-weight: 600;
     letter-spacing: 0.01em;
     color: var(--card-header-text);
-    text-shadow: 0 0 5px var(--accent-color-primary);
+    text-shadow: 0 0 3px var(--accent-color-primary);
     font-family: 'VT323', monospace;
 }
 
 .operative-tags-container {
-    margin-top: 4px;
+    margin-top: 2px;
     display: flex;
-    gap: 6px;
+    gap: 4px;
 }
 
 .operative-tag {
@@ -476,15 +476,15 @@ button:hover {
 .operative-core-stats {
     display: grid; /* Use grid for easy alignment */
     grid-template-columns: repeat(4, 1fr); /* Four stats */
-    gap: 5px; /* Small gap */
-    padding: 10px 15px;
+    gap: 3px;
+    padding: 8px 10px;
     background-color: var(--card-section-bg);
     border-bottom: 1px solid var(--accent-color-primary);
     text-align: center;
 }
 
 .core-stat-label {
-    font-size: 0.65em;
+    font-size: 0.6em;
     font-weight: 500;
     text-transform: uppercase;
     color: var(--text-color-secondary);
@@ -494,7 +494,7 @@ button:hover {
 }
 
 .core-stat-value {
-    font-size: 1.3em;
+    font-size: 1.2em;
     font-weight: 600;
     color: var(--text-color-primary);
     line-height: 1.1;
@@ -511,19 +511,19 @@ button:hover {
 }
 
 .card-body {
-    padding: 15px;
+    padding: 12px;
     flex-grow: 1; /* Allows body to fill remaining space */
 }
 
 .health-bar {
-    height: 28px; /* Slightly slimmer */
+    height: 24px;
     background-color: var(--health-bar-background);
     border-radius: 4px; /* Match other rounding */
     cursor: pointer; 
     position: relative; 
     overflow: hidden; 
     border: 1px solid var(--accent-color-primary);
-    margin-bottom: 12px;
+    margin-bottom: 10px;
 }
 .health-bar-fill {
     height: 100%;
@@ -537,19 +537,19 @@ button:hover {
     font-size: 0.8em;
     font-weight: 600;
     color: #FFFFFF;
-    text-shadow: 0 0 5px var(--accent-color-primary);
+    text-shadow: 0 0 3px var(--accent-color-primary);
 }
 
 .card-controls-area {
     display: flex;
-    gap: 10px;
-    margin-bottom: 15px;
+    gap: 6px;
+    margin-bottom: 10px;
 }
 
 .order-toggle, .activation-status {
     flex: 1;
-    padding: 8px 10px;
-    font-size: 0.8em;
+    padding: 6px 8px;
+    font-size: 0.75em;
     font-weight: 600;
     border: 1px solid var(--button-border-color);
     background-color: var(--button-bg);
@@ -586,8 +586,8 @@ button:hover {
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: var(--text-color-secondary);
-    margin-top: 20px;
-    margin-bottom: 8px;
+    margin-top: 12px;
+    margin-bottom: 6px;
     padding-bottom: 4px;
     border-bottom: 1px solid var(--accent-color-primary);
 }
@@ -598,7 +598,7 @@ button:hover {
 .weapon-table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     font-size: 0.8em; /* Denser table text */
 }
 .weapon-table th, .weapon-table td {
@@ -624,7 +624,7 @@ button:hover {
 }
 .ability-list li, .action-list li {
     margin-bottom: 0; /* Let padding handle spacing */
-    padding: 6px 2px; /* Add some vertical padding */
+    padding: 4px 2px; /* Add some vertical padding */
     border-bottom: 1px dotted var(--accent-color-primary);
 }
 .ability-list li:last-child, .action-list li:last-child {
@@ -666,7 +666,7 @@ button:hover {
     text-decoration: underline dotted;
     cursor: pointer;
     font-weight: 500;
-    text-shadow: 0 0 3px var(--keyword-highlight-color);
+    text-shadow: 0 0 2px var(--keyword-highlight-color);
 }
 .tooltip {
     position: absolute;
