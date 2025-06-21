@@ -323,11 +323,13 @@ function renderDashboard() {
 
 function renderReferenceAccordions() {
     const makeSection = (title, items, isPloy) => {
+        const cards = items.map(item => {
             if (isPloy) {
                 return `<div class="reference-card"><button class="ploy-button" data-ploy-name="${item.name}" data-cp-cost="${item.cp}">${item.name} (${item.cp}CP)</button><div class="reference-card-text"><small>${parseKeywords(item.text)}</small></div></div>`;
             }
             return `<div class="reference-card"><strong>${item.name}${item.cp ? ` (${item.cp}CP)` : ''}</strong><div class="reference-card-text"><small>${parseKeywords(item.text)}</small></div></div>`;
         }).join('');
+        return `<h3>${title}</h3><div class="reference-card-container">${cards}</div>`;
     };
 
     factionRulesAccordionContainer.innerHTML = makeSection('Faction Rules', factionRules);
