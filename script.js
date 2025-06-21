@@ -276,8 +276,11 @@ function renderReferenceAccordions() {
     factionRulesAccordionContainer.innerHTML = makeSection('Faction Rules', factionRules);
     strategicPloysAccordionContainer.innerHTML = makeSection('Strategic Ploys', strategicPloys, true);
     firefightPloysAccordionContainer.innerHTML = makeSection('Firefight Ploys', firefightPloys, true);
-    factionEquipmentAccordionContainer.innerHTML = makeSection('Faction Equipment', factionEquipment);
-    universalEquipmentAccordionContainer.innerHTML = makeSection('Universal Equipment', universalEquipment);
+    const selectedFactionEq = killTeamEquipment.filter(eq => factionEquipment.some(f => f.name === eq.name));
+    const selectedUniversalEq = killTeamEquipment.filter(eq => universalEquipment.some(u => u.name === eq.name));
+
+    factionEquipmentAccordionContainer.innerHTML = makeSection('Faction Equipment', selectedFactionEq);
+    universalEquipmentAccordionContainer.innerHTML = makeSection('Universal Equipment', selectedUniversalEq);
 }
 
 function renderChosenEquipmentCards() {
