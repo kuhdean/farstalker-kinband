@@ -406,3 +406,56 @@ button { cursor: pointer; border-radius: 5px; border: none; padding: 10px 15px; 
 
 .equip-item { margin-bottom: 10px; }
 .equip-item button { margin-left: 8px; }
+
+/* --- KILL TEAM EQUIPMENT SELECTION --- */
+#kill-team-equipment-selector {
+    margin-top: 20px;
+    background: var(--card-bg-main);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: var(--card-shadow);
+}
+
+#available-equipment-pool {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.equipment-card {
+    border: 1px solid var(--card-border-light);
+    padding: 10px;
+    border-radius: 4px;
+    width: 180px;
+    background: var(--card-section-bg);
+}
+.equipment-card button { margin-top: 5px; }
+
+#chosen-kill-team-equipment { list-style: none; padding-left: 0; }
+#chosen-kill-team-equipment li { margin-bottom: 5px; }
+
+#chosen-equipment-display-area {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.chosen-equipment-card {
+    border: 1px solid var(--card-border-light);
+    background: var(--card-bg-main);
+    padding: 10px;
+    border-radius: 4px;
+    width: 200px;
+}
+
+.ploy-button {
+    background: var(--button-bg);
+    border: 1px solid var(--button-border-color);
+    color: var(--button-text-color);
+    padding: 5px 8px;
+    border-radius: 4px;
+    margin-right: 6px;
+}
+.ploy-button:disabled { opacity: 0.6; }

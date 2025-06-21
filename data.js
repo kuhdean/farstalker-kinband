@@ -35,10 +35,16 @@ const firefightPloys = [
 ];
 
 const factionEquipment = [
-    { name: 'Piercing Shot', text: "Once per turning point, when shooting with a Kroot rifle/scattergun/dual pistols, give that weapon Piercing 1. Cannot be used with Toxin Shot." },
-    { name: 'Toxin Shot', text: "Once per turning point, when shooting with a Kroot rifle/scattergun/dual pistols, give that weapon Lethal 5+ and Stun. Cannot be used with Piercing Shot." },
-    { name: 'Meat', text: "Once per turning point, when a friendly operative (excluding HOUND) activates while not within control range of enemy operatives, it can regain D3+1 lost wounds." },
-    { name: 'Trophy', text: "Once per battle, during a friendly operative's activation (excluding HOUND), before or after an action, if not in control range of enemy operatives, gain +1 APL until the end of its activation." }
+    { name: 'Piercing Shot', epCost: 1, text: "Once per turning point, when shooting with a Kroot rifle/scattergun/dual pistols, give that weapon Piercing 1. Cannot be used with Toxin Shot." },
+    { name: 'Toxin Shot', epCost: 1, text: "Once per turning point, when shooting with a Kroot rifle/scattergun/dual pistols, give that weapon Lethal 5+ and Stun. Cannot be used with Piercing Shot." },
+    { name: 'Meat', epCost: 1, text: "Once per turning point, when a friendly operative (excluding HOUND) activates while not within control range of enemy operatives, it can regain D3+1 lost wounds." },
+    { name: 'Trophy', epCost: 2, text: "Once per battle, during a friendly operative's activation (excluding HOUND), before or after an action, if not in control range of enemy operatives, gain +1 APL until the end of its activation." }
+];
+
+const universalEquipment = [
+    { name: 'Portable Barricade', epCost: 2, text: 'Once per battle, after this operative moves, place a barricade within 1\" of it.' },
+    { name: 'Utility Grenades', epCost: 3, text: 'Once per battle, select either a stun or smoke grenade profile and resolve it (Range 6\", Blast 2\").' },
+    { name: 'Climbing Gear', epCost: 1, text: 'This operative does not increase distance for climbing.' }
 ];
 
 const operativesData = [
