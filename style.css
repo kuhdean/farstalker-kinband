@@ -416,7 +416,7 @@ button:hover {
 /* --- OPERATIVE CARD STYLES (NEW/UPDATED) --- */
 #active-operative-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 15px;
 }
 
@@ -427,23 +427,7 @@ button:hover {
     box-shadow: var(--card-shadow);
     overflow: hidden;
     display: flex;
-    flex-direction: row;
-}
-.op-card-main-content {
-    flex: 1;
-    display: flex;
     flex-direction: column;
-}
-
-.op-card-context-bar {
-    flex-basis: 80px;
-    border-left: 1px solid var(--card-border-color);
-    background-color: var(--card-section-bg);
-    padding: 6px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    align-items: stretch;
 }
 
 .context-btn {
@@ -454,6 +438,13 @@ button:hover {
     color: var(--button-text-color);
     border-radius: 2px;
     cursor: pointer;
+}
+
+.context-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 6px;
 }
 
 .context-btn:hover {
