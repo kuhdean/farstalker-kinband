@@ -410,39 +410,6 @@ button:hover {
     font-size: 0.85em;
     margin-top: 5px;
 }
-
-/* Reference data displayed as cards */
-.reference-card-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-.reference-card {
-    background: var(--card-section-bg);
-    border: 1px solid var(--card-border-light);
-    border-radius: 2px;
-    padding: 10px;
-    flex-basis: calc(33.333% - 10px);
-    min-width: 200px;
-    box-shadow: 0 0 5px var(--accent-color-secondary);
-    font-size: 0.85em;
-    line-height: 1.4;
-}
-.reference-card strong {
-    font-family: 'Inter', sans-serif;
-    color: var(--accent-color-primary);
-    display: block;
-    margin-bottom: 5px;
-}
-.reference-card small {
-    color: var(--text-color-primary);
-}
-.reference-card .ploy-button {
-    width: 100%;
-    margin-bottom: 5px;
-}
-.reference-card-text {
-    font-size: 0.85em;
 }
 
 /* --- OPERATIVE CARD STYLES (NEW/UPDATED) --- */
