@@ -2,7 +2,7 @@
 
 // --- GLOBAL STATE ---
 let activeRoster = [];
-let gameState = { turn: 1, cp: 2, vp: 0, totalEp: 10, spentEp: 0 }; // Added EP tracking
+let gameState = { turn: 1, cp: 2, vp: 0 };
 let hasInitiative = true; // Default, will be set by user
 
 // --- DOM ELEMENT SELECTORS ---
@@ -19,8 +19,6 @@ const turnValueSpan = document.getElementById('turn-value');
 const cpValueSpan = document.getElementById('cp-value');
 const vpValueSpan = document.getElementById('vp-value');
 const readyAllBtn = document.getElementById('ready-all-btn');
-const epSpentSpan = document.getElementById('ep-spent');
-const epTotalSpan = document.getElementById('ep-total');
 const initiativeHolderSpan = document.getElementById('initiative-holder');
 const resetRosterBtn = document.getElementById('reset-roster-btn');
 const equipmentModal = document.getElementById('equipment-modal');
@@ -32,7 +30,7 @@ function loadState() {
         try { activeRoster = JSON.parse(rosterData); } catch { activeRoster = []; }
     }
     if (gameData) {
-        try { gameState = JSON.parse(gameData); } catch { gameState = { turn: 1, cp: 2, vp: 0, totalEp: 10, spentEp: 0 }; }
+        try { gameState = JSON.parse(gameData); } catch { gameState = { turn: 1, cp: 2, vp: 0 }; }
     }
 }
 
@@ -55,7 +53,6 @@ document.addEventListener('DOMContentLoaded', () => {
     bindStaticEventListeners();
     renderRosterList();
     validateFullRoster();
-    updateEpDisplay(); // Initialize EP display
 });
 
 // --- ROSTER BUILDER LOGIC ---
@@ -99,14 +96,11 @@ function addOperativeToRoster(opId) {
 function removeOperativeFromRoster(instanceId) {
     const operativeToRemove = activeRoster.find(op => op.instanceId == instanceId);
     if (operativeToRemove && operativeToRemove.chosenEquipment.length > 0) {
-        operativeToRemove.chosenEquipment.forEach(eq => {
-            gameState.spentEp -= eq.epCost;
-        });
+        // Equipment removal no longer adjusts EP
     }
     activeRoster = activeRoster.filter(op => op.instanceId != instanceId);
     renderRosterList();
     validateFullRoster();
-    updateEpDisplay();
     saveState();
 }
 
@@ -129,31 +123,24 @@ function renderRosterList() {
         rosterListContainer.appendChild(item);
     });
     rosterCountSpan.textContent = activeRoster.length;
-    updateEpDisplay();
 }
 
-function updateEpDisplay() {
-    epSpentSpan.textContent = gameState.spentEp;
-    epTotalSpan.textContent = gameState.totalEp;
-}
 
 function openEquipmentModal(instanceId) {
     const operative = activeRoster.find(op => op.instanceId == instanceId);
     if (!operative) return;
 
     let availableHTML = factionEquipment.map(eq => {
-        const disabled = gameState.spentEp + eq.epCost > gameState.totalEp ||
-                         (operative.id === 'hound' && (eq.name === 'Meat' || eq.name === 'Trophy')) ||
+        const disabled = (operative.id === 'hound' && (eq.name === 'Meat' || eq.name === 'Trophy')) ||
                          operative.chosenEquipment.some(e => e.name === eq.name);
-        return `<li class="equip-item">${eq.name} (${eq.epCost}EP) <button class="add-eq-btn" data-id="${instanceId}" data-eq="${eq.name}" ${disabled ? 'disabled' : ''}>Add</button><div><small>${parseKeywords(eq.text)}</small></div></li>`;
+        return `<li class="equip-item">${eq.name} <button class="add-eq-btn" data-id="${instanceId}" data-eq="${eq.name}" ${disabled ? 'disabled' : ''}>Add</button><div><small>${parseKeywords(eq.text)}</small></div></li>`;
     }).join('');
 
-    let chosenHTML = operative.chosenEquipment.map(eq => `<li class="equip-item">${eq.name} (${eq.epCost}EP) <button class="remove-eq-btn" data-id="${instanceId}" data-eq="${eq.name}">Remove</button></li>`).join('');
+    let chosenHTML = operative.chosenEquipment.map(eq => `<li class="equip-item">${eq.name} <button class="remove-eq-btn" data-id="${instanceId}" data-eq="${eq.name}">Remove</button></li>`).join('');
     if (!chosenHTML) chosenHTML = '<li class="equip-item"><em>None</em></li>';
 
     equipmentModal.innerHTML = `<div class="modal-content">
         <h3>Equip ${operative.name}</h3>
-        <p>EP: ${gameState.spentEp} / ${gameState.totalEp}</p>
         <h4>Available</h4>
         <ul>${availableHTML}</ul>
         <h4>Chosen</h4>
@@ -172,12 +159,9 @@ function addEquipmentToOperative(instanceId, eqName) {
     const operative = activeRoster.find(op => op.instanceId == instanceId);
     const eqData = factionEquipment.find(eq => eq.name === eqName);
     if (!operative || !eqData) return;
-    if (gameState.spentEp + eqData.epCost > gameState.totalEp) return;
     if (operative.id === 'hound' && (eqName === 'Meat' || eqName === 'Trophy')) return;
     if (operative.chosenEquipment.some(eq => eq.name === eqName)) return;
     operative.chosenEquipment.push(eqData);
-    gameState.spentEp += eqData.epCost;
-    updateEpDisplay();
     renderRosterList();
     saveState();
     openEquipmentModal(instanceId);
@@ -188,9 +172,7 @@ function removeEquipmentFromOperative(instanceId, eqName) {
     if (!operative) return;
     const index = operative.chosenEquipment.findIndex(eq => eq.name === eqName);
     if (index === -1) return;
-    gameState.spentEp -= operative.chosenEquipment[index].epCost;
     operative.chosenEquipment.splice(index, 1);
-    updateEpDisplay();
     renderRosterList();
     saveState();
     openEquipmentModal(instanceId);
@@ -247,7 +229,7 @@ function renderDashboard() {
 
 function renderReferencePanel() {
     const createAccordion = (title, items) => {
-        const listItems = items.map(item => `<li><strong>${item.name} ${item.cp ? `(${item.cp}CP)` : ''}${item.epCost ? ` (${item.epCost}EP)` : ''}:</strong> ${item.text}</li>`).join('');
+        const listItems = items.map(item => `<li><strong>${item.name} ${item.cp ? `(${item.cp}CP)` : ''}:</strong> ${item.text}</li>`).join('');
         return `
             <div>
                 <button class="accordion">${title}</button>
@@ -310,7 +292,7 @@ function renderAllOperativeCards() {
 
         const abilitiesHTML = op.abilities.map(a => `<li><strong>${a.name}:</strong> ${parseKeywords(a.text)}</li>`).join('');
         const actionsHTML = (op.uniqueActions || []).map(a => `<li><strong>${a.name}:</strong> ${parseKeywords(a.text)}</li>`).join('');
-        const equipmentHTML = op.chosenEquipment.map(eq => `<li><small><em>${eq.name} (${eq.epCost}EP)</em></small></li>`).join('');
+        const equipmentHTML = op.chosenEquipment.map(eq => `<li><small><em>${eq.name}</em></small></li>`).join('');
 
         card.innerHTML = `
             <div class="card-header">
