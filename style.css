@@ -93,6 +93,8 @@ button { cursor: pointer; border-radius: 5px; border: none; padding: 10px 15px; 
 .operative-pool-button:hover { background-color: #ecf0f1; }
 .roster-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; background-color: #f9f9f9; border: 1px solid var(--border-color); margin-bottom: 5px; }
 .remove-op-btn { color: var(--injured-color-border); font-weight: bold; background: none; font-size: 1.2em; }
+.equip-op-btn { margin-right: 8px; }
+.roster-item-equipment { margin-top: 4px; font-size: 0.85em; color: var(--text-color-secondary); }
 
 
 /* --- GAME TRACKER DASHBOARD --- */
@@ -375,3 +377,32 @@ button { cursor: pointer; border-radius: 5px; border: none; padding: 10px 15px; 
     pointer-events: none;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
+
+/* --- EQUIPMENT MODAL STYLES --- */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.modal-content {
+    background: var(--card-bg-main);
+    border: 1px solid var(--card-border-color);
+    border-radius: 6px;
+    padding: 20px;
+    max-width: 420px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: var(--card-shadow);
+}
+
+.equip-item { margin-bottom: 10px; }
+.equip-item button { margin-left: 8px; }
