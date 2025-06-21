@@ -39,18 +39,90 @@ const firefightPloys = [
 ];
 
 const factionEquipment = [
-    { name: 'Piercing Shot', epCost: 1, text: "Once per turning point, when shooting with a Kroot rifle/scattergun/dual pistols, give that weapon Piercing 1. Cannot be used with Toxin Shot.", eligible_weapons: ['Kroot rifle', 'Kroot scattergun', 'Dual Kroot pistols (focused)'] },
-    { name: 'Toxin Shot', epCost: 1, text: "Once per turning point, when shooting with a Kroot rifle/scattergun/dual pistols, give that weapon Lethal 5+ and Stun. Cannot be used with Piercing Shot.", eligible_weapons: ['Kroot rifle', 'Kroot scattergun', 'Dual Kroot pistols (focused)'] },
-    { name: 'Meat', epCost: 1, text: "Once per turning point, when a friendly operative (excluding HOUND) activates while not within control range of enemy operatives, it can regain D3+1 lost wounds.", ineligible_ids: ['hound'] },
-    { name: 'Trophy', epCost: 2, text: "Once per battle, during a friendly operative's activation (excluding HOUND), before or after an action, if not in control range of enemy operatives, gain +1 APL until the end of its activation.", ineligible_ids: ['hound'] }
+    {
+        name: 'Piercing Shot',
+        epCost: 1,
+        text: 'Once per turning point, when a friendly FARSTALKER KINBAND operative is performing the Shoot action and you select a Kroot rifle, Kroot scattergun or dual Kroot pistols (focused), you can use this rule. If you do, until the end of that action, that weapon has the Piercing 1 weapon rule. You cannot use the Piercing Shot and Toxin Shot rule during the same action.',
+        eligible_weapons: ['Kroot rifle', 'Kroot scattergun', 'Dual Kroot pistols (focused)']
+    },
+    {
+        name: 'Toxin Shot',
+        epCost: 1,
+        text: 'Once per turning point, when a friendly FARSTALKER KINBAND operative is performing the Shoot action and you select a Kroot rifle, Kroot scattergun or dual Kroot pistols (focused), you can use this rule. If you do, until the end of that action, that weapon has the Lethal 5+ and Stun weapon rules. You cannot use the Piercing Shot and Toxin Shot rule during the same action.',
+        eligible_weapons: ['Kroot rifle', 'Kroot scattergun', 'Dual Kroot pistols (focused)']
+    },
+    {
+        name: 'Meat',
+        epCost: 1,
+        text: 'Once per turning point, when a friendly FARSTALKER KINBAND operative (excluding HOUND) is activated, if it\'s not within control range of enemy operatives, you can use this rule. If you do, that friendly operative regains D3+1 lost wounds.',
+        ineligible_ids: ['hound']
+    },
+    {
+        name: 'Trophy',
+        epCost: 2,
+        text: 'Once per battle, during a friendly FARSTALKER KINBAND operative\'s activation (excluding HOUND), before or after it performs an action, if it\'s not within control range of enemy operatives, you can use this rule. If you do, add 1 to that friendly operative\'s APL stat until the end of its activation.',
+        ineligible_ids: ['hound']
+    }
 ];
+
 
 const universalEquipment = [
-    { name: 'Portable Barricade', epCost: 2, text: 'Once per battle, after this operative moves, place a barricade within 1\" of it.' },
-    { name: 'Utility Grenades', epCost: 3, text: 'Once per battle, select either a stun or smoke grenade profile and resolve it (Range 6\", Blast 2\").' },
-    { name: 'Climbing Gear', epCost: 1, text: 'This operative does not increase distance for climbing.' }
+    {
+        name: 'Portable Barricade',
+        epCost: 2,
+        text: 'A portable barricade is Light, Protective and Portable terrain. Before the battle, you can set it up wholly within your territory, on the killzone floor and more than 2" from other equipment terrain features, access points and Accessible terrain. Protective: While an operative is in cover from this terrain feature, improve its Save stat by 1 (to a maximum of 2+). Portable: This terrain feature only provides cover while an operative is connected to it and if the shield is intervening. Operatives connected to the inside of it can perform the MOVE WITH BARRICADE (1AP) action to reposition it.'
+    },
+    {
+        name: 'Utility Grenades',
+        epCost: 3,
+        text: 'Select two utility grenades (2 smoke, 2 stun, or 1 of each). Each selection becomes a unique action your operatives can perform a number of times equal to your selection. SMOKE GRENADE (1AP): Place a Smoke marker within 6" that is visible, creating an area of smoke 1" horizontally and unlimited vertically. Remove it after D3 activations in the next Strategy phase. STUN GRENADE (1AP): Select one enemy operative within 6" and visible; that operative and each other operative within 1" of it takes a stun test on a 3+, subtracting 1 from APL until the end of its next activation.'
+    },
+    {
+        name: 'Explosive Grenades',
+        epCost: 3,
+        text: 'Select two explosive grenades (2 frag, 2 krak, or 1 of each). Each selection is a ranged weapon your operatives can use a number of times equal to your selection. FRAG GRENADE: 4 attacks, Hit 4+, Damage 2/4, Range 6", Blast 2", Saturate. KRAK GRENADE: 4 attacks, Hit 4+, Damage 4/5, Range 6", Piercing 1, Saturate.'
+    },
+    {
+        name: 'Ammo Cache',
+        epCost: 2,
+        text: 'Before the battle, set up one Ammo Cache marker wholly within your territory. AMMO RESUPPLY (0AP): Use a marker this turning point. Until the start of the next turning point, when shooting with a weapon from its datacard, you can re-roll one attack die.'
+    },
+    {
+        name: 'Razor Wire',
+        epCost: 1,
+        text: 'Razor wire is Exposed and Obstructing terrain. Before the battle, set it up wholly within your territory, on the killzone floor and more than 2" from other equipment terrain features, access points and Accessible terrain. When crossing within 1" of it, treat the distance as an additional 1".'
+    },
+    {
+        name: 'Comms Device',
+        epCost: 2,
+        text: 'Before the battle, set up one Comms Device marker wholly within your territory. While a friendly operative controls this marker, add 3" to the distance requirements of its SUPPORT rules that refer to friendly operatives.'
+    },
+    {
+        name: 'Mines',
+        epCost: 2,
+        text: 'Before the battle, set up one Mines marker wholly within your territory and more than 2" from other markers, access points and Accessible terrain. The first time that marker is within an operative\'s control range, remove it and inflict D3+3 damage on that operative.'
+    },
+    {
+        name: 'Light Barricades',
+        epCost: 2,
+        text: 'Light barricades are Light terrain except for the feet, which are Insignificant and Exposed. Before the battle, set up any of them wholly within your territory, on the killzone floor and more than 2" from other equipment terrain features, access points and Accessible terrain.'
+    },
+    {
+        name: 'Heavy Barricade',
+        epCost: 3,
+        text: 'A heavy barricade is Heavy terrain. Before the battle, set it up wholly within 4" of your drop zone, on the killzone floor and more than 2" from other equipment terrain features, access points and Accessible terrain.'
+    },
+    {
+        name: 'Ladders',
+        epCost: 1,
+        text: 'Ladders are Exposed terrain. Before the battle, set up any of them wholly within your territory, upright against terrain at least 2" tall, more than 2" from other equipment terrain features and more than 1" from doors and access points. Operatives can move through ladders as if they aren\'t there or climb them, treating the vertical distance as 1" when climbing this terrain feature.'
+    },
+    {
+        name: 'Climbing Gear',
+        epCost: 1,
+        text: 'This operative does not increase distance for climbing.'
+    }
 ];
-
 const operativesData = [
     {
         id: 'kill_broker',

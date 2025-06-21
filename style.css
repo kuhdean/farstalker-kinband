@@ -359,6 +359,15 @@ button:hover {
     grid-column: 1 / -1;
 }
 
+/* Let reference sections span full width like the equipment section */
+#faction-rules-accordion-container,
+#strategic-ploys-accordion-container,
+#firefight-ploys-accordion-container,
+#faction-equipment-accordion-container,
+#universal-equipment-accordion-container {
+    grid-column: 1 / -1;
+}
+
 #chosen-equipment-card-container {
     display: flex;
     flex-wrap: wrap;
@@ -383,6 +392,38 @@ button:hover {
     margin-bottom: 5px;
 }
 .chosen-equipment-card small {
+    color: var(--text-color-primary);
+}
+
+/* Reference cards (rules & ploys) styled like chosen equipment */
+.reference-card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.reference-card {
+    background: var(--card-section-bg);
+    border: 1px solid var(--accent-color-secondary);
+    border-radius: 2px;
+    padding: 10px;
+    flex-basis: calc(33.333% - 10px);
+    min-width: 200px;
+    box-shadow: var(--card-shadow);
+    font-size: 0.85em;
+    line-height: 1.4;
+    display: flex;
+    flex-direction: column;
+}
+
+.reference-card strong {
+    font-family: 'Inter', sans-serif;
+    color: var(--accent-color-primary);
+    display: block;
+    margin-bottom: 5px;
+}
+
+.reference-card small {
     color: var(--text-color-primary);
 }
 
@@ -445,7 +486,6 @@ button:hover {
 .ploy-text {
     font-size: 0.85em;
     margin-top: 5px;
-}
 }
 
 /* --- OPERATIVE CARD STYLES (NEW/UPDATED) --- */
@@ -543,9 +583,10 @@ button:hover {
     display: grid; /* Use grid for easy alignment */
     grid-template-columns: repeat(4, 1fr); /* Four stats */
     gap: 3px;
-    padding: 4px 0 0 0;
+    padding: 4px 0;
     background-color: transparent;
-    border-bottom: none;
+    border-bottom: 1px solid var(--card-border-light);
+    margin-bottom: 6px;
     text-align: center;
 }
 
@@ -579,6 +620,8 @@ button:hover {
 .card-body {
     padding: 8px;
     flex-grow: 1; /* Allows body to fill remaining space */
+    display: flex;
+    flex-direction: column;
 }
 
 .health-bar {
