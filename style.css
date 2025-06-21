@@ -81,7 +81,8 @@ body::after {
 }
 
 header { background-color: var(--card-header-bg); color: var(--card-header-text); padding: 15px 25px; margin-bottom: 20px; border: 1px solid var(--accent-color-primary); box-shadow: var(--card-shadow); display: flex; justify-content: space-between; align-items: center; }
-h1, h2, h3, h4, h5 { margin-top: 0; margin-bottom: 0.5em; font-family: 'Inter', sans-serif; text-shadow: none; }
+h1, h2, h3 { margin-top: 0; margin-bottom: 0.5em; font-family: 'VT323', monospace; text-shadow: none; }
+h4, h5 { margin-top: 0; margin-bottom: 0.5em; font-family: 'Inter', sans-serif; text-shadow: none; }
 .header-actions { display: flex; gap: 10px; }
 button {
     cursor: pointer;
@@ -180,7 +181,7 @@ button:hover {
 .operative-tile:hover,
 .equipment-tile:hover {
     background-color: rgba(0, 119, 255, 0.05);
-    box-shadow: 0 0 8px rgba(0,119,255,0.6);
+    box-shadow: var(--card-shadow);
 }
 
 .operative-tile.disabled,
@@ -248,7 +249,7 @@ button:hover {
 .operative-tile.selected,
 .equipment-tile.selected {
     border-color: var(--accent-color-secondary);
-    box-shadow: 0 0 10px var(--accent-color-secondary);
+    box-shadow: var(--card-shadow);
 }
 
 
@@ -336,7 +337,7 @@ button:hover {
     padding: 10px;
     flex-basis: calc(33.333% - 10px);
     min-width: 200px;
-    box-shadow: 0 0 5px var(--accent-color-secondary);
+    box-shadow: var(--card-shadow);
     font-size: 0.85em;
     line-height: 1.4;
 }
@@ -415,7 +416,7 @@ button:hover {
 /* --- OPERATIVE CARD STYLES (NEW/UPDATED) --- */
 #active-operative-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 15px;
 }
 
@@ -426,7 +427,37 @@ button:hover {
     box-shadow: var(--card-shadow);
     overflow: hidden;
     display: flex;
+    flex-direction: row;
+}
+.op-card-main-content {
+    flex: 1;
+    display: flex;
     flex-direction: column;
+}
+
+.op-card-context-bar {
+    flex-basis: 80px;
+    border-left: 1px solid var(--card-border-color);
+    background-color: var(--card-section-bg);
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: stretch;
+}
+
+.context-btn {
+    font-size: 0.7em;
+    padding: 4px;
+    border: 1px solid var(--button-border-color);
+    background: var(--button-bg);
+    color: var(--button-text-color);
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.context-btn:hover {
+    background-color: var(--button-bg-hover);
 }
 
 .card-header {
@@ -688,5 +719,5 @@ button:hover {
     font-size: 0.8em;
     line-height: 1.4;
     pointer-events: none;
-    box-shadow: 0 0 5px var(--accent-color-primary);
+    box-shadow: var(--card-shadow);
 }
