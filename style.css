@@ -535,12 +535,16 @@ button:hover {
 }
 .accordion-content {
     background-color: var(--card-bg-main);
+    padding: 0 12px; /* No vertical padding when collapsed */
     padding: 10px 12px;
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.3s ease-out;
+    transition: max-height 0.3s ease-out, padding 0.3s ease-out;
     border: 1px solid var(--accent-color-primary);
     border-top: none;
+}
+.accordion-content.open {
+    padding: 10px 12px;
 }
 .accordion-content ul { list-style: none; padding-left: 0; margin: 10px 0; }
 .accordion-content li {

@@ -576,8 +576,10 @@ function bindAccordions() {
             btn.classList.toggle('active');
             if (content.style.maxHeight) {
                 content.style.maxHeight = null;
+                content.classList.remove('open');
             } else {
                 content.style.maxHeight = content.scrollHeight + 'px';
+                content.classList.add('open');
             }
         };
     });
@@ -594,7 +596,10 @@ function bindStaticEventListeners() {
         else if (target.matches('.vp-mod')) modifyStateValue('vp', parseInt(target.dataset.amount));
         else if (target.matches('.order-toggle')) toggleOrder(target.dataset.id);
         else if (target.matches('.activation-status')) toggleActivation(target.dataset.id);
-        else if (target.matches('.health-bar')) handleHealthClick(target.dataset.id, e);
+        else if (target.closest('.health-bar')) {
+            const bar = target.closest('.health-bar');
+            handleHealthClick(bar.dataset.id, e);
+        }
         
         else if (target.matches('.ploy-button')) usePloy(target.dataset.ployName, parseInt(target.dataset.cpCost), target);
         else if (target.matches('.keyword')) showTooltip(target.textContent, e);
