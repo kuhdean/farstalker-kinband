@@ -145,6 +145,7 @@ For performance, minor updates (like changing wounds or toggling activation) don
 
 Every time you take an action that changes the state (add/remove an operative, change wounds, use a ploy), the `saveState()` function is called. This function converts the `activeRoster`, `killTeamEquipment`, and `gameState` variables into JSON strings and saves them in the browser's `localStorage`. When the page is loaded, `loadState()` reads this data, parses it, and repopulates the global state variables, ensuring your game is exactly as you left it. To reset everything, use the "Reset Roster" button, which calls `resetRoster()` to clear the data from `localStorage` and reload the page.
 
+
 ### Tracking Operative Health
 
 Each operative card features an interactive health bar displaying the operative's current and total wounds. Click the left half of the bar to heal 1 wound, or the right half to suffer 1 wound. The bar's color changes as the operative becomes wounded or injured, and the exact wound count is shown in the centre. Health values are saved in `localStorage` so wound totals persist between page reloads.
