@@ -266,12 +266,23 @@ function renderRosterList() {
     cell.classList.add("roster-square");
     if (op) {
       cell.innerHTML = `
+  if (activeRoster.length === 0) {
+    const emptyMsg = document.createElement("p");
+    emptyMsg.classList.add("empty-roster");
+    emptyMsg.textContent = "No operatives selected";
+    rosterListContainer.appendChild(emptyMsg);
+  } else {
+    activeRoster.forEach((op) => {
+      const item = document.createElement("div");
+      item.classList.add("roster-item");
+      item.innerHTML = `
         <div class="roster-info">
           <strong>${op.name}</strong>
           <small>APL ${op.stats.apl}, W ${op.stats.wounds}</small>
         </div>
         <button class="remove-op-btn" data-id="${op.instanceId}" title="Remove">✖</button>`;
       cell
+      item
         .querySelector(".remove-op-btn")
         .addEventListener("click", () =>
           removeOperativeFromRoster(op.instanceId),
@@ -281,6 +292,26 @@ function renderRosterList() {
     }
     rosterListContainer.appendChild(cell);
   }
+      rosterListContainer.appendChild(item);
+    });
+  }
+  activeRoster.forEach((op) => {
+    const item = document.createElement("div");
+    item.classList.add("roster-item");
+    item.innerHTML = `
+            <div>
+                <span>${op.name}</span>
+            </div>
+            <div>
+                <button class="remove-op-btn" data-id="${op.instanceId}">X</button>
+            </div>`;
+    item
+      .querySelector(".remove-op-btn")
+      .addEventListener("click", () =>
+        removeOperativeFromRoster(op.instanceId),
+      );
+  rosterListContainer.appendChild(item);
+  });
   rosterCountSpan.textContent = activeRoster.length;
 }
 
