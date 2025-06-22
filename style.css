@@ -752,6 +752,14 @@ button:hover {
     transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, color 0.15s ease-in-out, box-shadow 0.15s;
     margin-bottom: 0;
 }
+.order-toggle.conceal {
+    background-color: #333333;
+    color: #ffffff;
+}
+.order-toggle.engage {
+    background-color: var(--accent-color-primary);
+    color: #000000;
+}
 .order-toggle:hover, .activation-status:hover {
     background-color: var(--button-bg-hover);
     border-color: var(--accent-color-secondary);
@@ -839,7 +847,7 @@ button:hover {
 
 /* --- DYNAMIC STATE STYLES --- */
 .operative-card.is-activated {
-    /* opacity: 0.75; */ /* Consider if too much with button state, currently handled by button style */
+    opacity: 0.5;
 }
 .operative-card.is-injured {
     border-left: 6px solid var(--injured-color-border);
@@ -854,6 +862,12 @@ button:hover {
 }
 .operative-card.is-incapacitated .card-header {
     background-color: var(--text-color-secondary);
+}
+.operative-card.order-conceal {
+    border-color: var(--accent-color-secondary);
+}
+.operative-card.order-engage {
+    border-color: var(--accent-color-primary);
 }
 #start-game-btn:disabled { background-color: #ccc; cursor: not-allowed; }
 

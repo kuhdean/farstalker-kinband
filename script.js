@@ -5,7 +5,6 @@ let activeRoster = [];
 let gameState = { turn: 1, cp: 2, vp: 0, totalEp: 10, spentEp: 0 };
 let killTeamEquipment = [];
 const MAX_EQUIPMENT_ITEMS = 4;
-let hasInitiative = true; // Default, will be set by user
 
 // --- DOM ELEMENT SELECTORS ---
 const rosterBuilderView = document.getElementById('roster-builder-view');
@@ -25,7 +24,6 @@ const cpValueSpan = document.getElementById('cp-value');
 const cpMessageSpan = document.getElementById('cp-message');
 const vpValueSpan = document.getElementById('vp-value');
 const readyAllBtn = document.getElementById('ready-all-btn');
-const initiativeHolderSpan = document.getElementById('initiative-holder');
 const resetRosterBtn = document.getElementById('reset-roster-btn');
 const chosenKillTeamEquipmentList = document.getElementById('chosen-kill-team-equipment-list');
 const epSpentUI = document.getElementById('ep-spent-ui');
@@ -257,7 +255,6 @@ function renderDashboard() {
     turnValueSpan.textContent = gameState.turn;
     cpValueSpan.textContent = gameState.cp;
     vpValueSpan.textContent = gameState.vp;
-    initiativeHolderSpan.textContent = hasInitiative ? "YOU" : "OPPONENT";
 }
 
 function renderReferenceAccordions() {
@@ -269,12 +266,14 @@ function renderReferenceAccordions() {
             }
             return `<div class="reference-card"><strong>${item.name}${item.cp ? ` (${item.cp}CP)` : ''}</strong><div class="reference-card-text"><small>${parseKeywords(item.text)}</small></div></div>`;
         }).join('');
-        return `<h3>${title}</h3><div class="reference-card-container">${cards}</div>`;
+        return `<button class="accordion">${title}</button><div class="accordion-content"><div class="reference-card-container">${cards}</div></div>`;
     };
 
     factionRulesAccordionContainer.innerHTML = makeSection('Faction Rules', factionRules);
     strategicPloysAccordionContainer.innerHTML = makeSection('Strategic Ploys', strategicPloys, true);
     firefightPloysAccordionContainer.innerHTML = makeSection('Firefight Ploys', firefightPloys, true);
+
+    bindAccordions();
 }
 
 function renderChosenEquipmentCards() {
@@ -306,6 +305,8 @@ function renderChosenEquipmentCards() {
         card.innerHTML = cardHTML;
         chosenEquipmentCardContainer.appendChild(card);
     });
+
+    bindAccordions();
 }
 
 function parseKeywords(rulesString) {
@@ -466,7 +467,10 @@ function updateCardVisualState(instanceId) {
     healthText.textContent = `${operative.currentWounds} / ${operative.stats.wounds}`;
 
     // Order Toggle Button
-    card.querySelector('.order-toggle').textContent = `Order: ${operative.order}`;
+    const orderBtn = card.querySelector('.order-toggle');
+    orderBtn.textContent = `Order: ${operative.order}`;
+    orderBtn.classList.toggle('conceal', operative.order === 'Conceal');
+    orderBtn.classList.toggle('engage', operative.order === 'Engage');
 
     // Activation Button
     const activationBtn = card.querySelector('.activation-status');
@@ -474,8 +478,8 @@ function updateCardVisualState(instanceId) {
     activationBtn.classList.toggle('activated', operative.isActivated);
     activationBtn.textContent = operative.isActivated ? 'Activated' : 'Ready';
 
-    // Card State Classes (Injury, Wounded, Incapacitated)
-    card.classList.remove('is-wounded', 'is-injured', 'is-activated', 'is-incapacitated'); // Reset all
+    // Card State Classes (Injury, Wounded, Incapacitated, Orders)
+    card.classList.remove('is-wounded', 'is-injured', 'is-activated', 'is-incapacitated', 'order-conceal', 'order-engage'); // Reset all
     
     // Health bar fill color based on state
     if (operative.currentWounds === 0) {
@@ -491,6 +495,8 @@ function updateCardVisualState(instanceId) {
         healthFill.style.backgroundColor = 'var(--health-bar-full)';
     }
 
+    card.classList.add(operative.order === 'Conceal' ? 'order-conceal' : 'order-engage');
+
     if (operative.isActivated && operative.currentWounds > 0) { // Don't add if incapacitated
         card.classList.add('is-activated');
     }
@@ -502,8 +508,7 @@ function readyAllAndNextTurn() {
         alert("Game Over (End of Turning Point 4)");
         gameState.turn = 1;
     }
-    hasInitiative = confirm("Do you have initiative this turn? (OK for Yes, Cancel for No)");
-    gameState.cp = Math.min(6, gameState.cp + (hasInitiative ? 1 : 2));
+    gameState.cp = Math.min(6, gameState.cp + 1);
     activeRoster.forEach(op => {
         op.isActivated = false;
         // updateCardVisualState(op.instanceId); // This will be handled by renderAllOperativeCards
@@ -561,6 +566,21 @@ function showTooltip(keyword, event) {
 function removeTooltip() {
     const existing = document.querySelector('.tooltip');
     if (existing) existing.remove();
+}
+
+function bindAccordions() {
+    document.querySelectorAll('.accordion').forEach(btn => {
+        const content = btn.nextElementSibling;
+        if (!content) return;
+        btn.onclick = () => {
+            btn.classList.toggle('active');
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null;
+            } else {
+                content.style.maxHeight = content.scrollHeight + 'px';
+            }
+        };
+    });
 }
 
 function bindStaticEventListeners() {
