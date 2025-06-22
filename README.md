@@ -53,7 +53,7 @@ All game content is defined in `data.js`. Operatives, weapons, abilities and equ
 The app intentionally uses simple technologies—HTML, CSS and vanilla JavaScript—to keep it lean and easy to modify. The interface follows several principles outlined in `AGENT.md`:
 - **Cool Retro‑Blue Terminal**: dark backgrounds with sharp, clean borders and no glow effects.
 - **Efficient Tile Manager**: grids for selection lists and operative cards so everything fits on screen without scrolling.
-- **Clarity Over Flash**: readable fonts (`VT323` for headings, `Inter` for body text) and immediate visual feedback via `.selected`, `.disabled` and state classes on cards.
+- **Clarity Over Flash**: readable fonts (`Share Tech Mono` for headings, `Inter` for body text) and immediate visual feedback via `.selected`, `.disabled` and state classes on cards.
 - **Context Driven**: only information relevant to the current view is displayed, keeping the tracker uncluttered.
 
 ## Persistence

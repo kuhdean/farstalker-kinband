@@ -36,7 +36,7 @@ To understand *why* we make certain decisions, you must be aware of the project'
 *   **Primary Accent:** A readable, cool retro-blue (`--accent-color-primary: #0077FF;`). This is used for primary interactive elements, borders, and highlights.
 *   **Secondary Accent:** A complementary lighter blue (`--accent-color-secondary: #58AFFF;`). Used for secondary highlights, like selected-but-not-hovered states.
 *   **Typography:**
-    *   **Headings (`h1, h2, h3`):** Use the thematic pixel font `'VT323', monospace` for flavor.
+    *   **Headings (`h1, h2, h3`):** Use the monospaced `'Share Tech Mono', monospace` font for a clean console vibe.
     *   **Body & UI Text:** Use a highly readable, clean sans-serif font like `'Inter', sans-serif` for all other text (paragraphs, tables, lists, buttons) to ensure maximum clarity.
 *   **Clarity Over Flash: NO GLOW EFFECTS.**
     *   The user has explicitly requested all glow effects be removed for readability.
