@@ -264,6 +264,7 @@ function renderDashboard() {
 
 function renderReferenceAccordions() {
     const makeSection = (title, items, isPloy) => {
+        if (!items || items.length === 0) return '';
         const cards = items.map(item => {
             if (isPloy) {
                 return `<div class="reference-card"><button class="ploy-button" data-ploy-name="${item.name}" data-cp-cost="${item.cp}">${item.name} (${item.cp}CP)</button><div class="reference-card-text"><small>${parseKeywords(item.text)}</small></div></div>`;
@@ -281,8 +282,13 @@ function renderReferenceAccordions() {
     const selectedFactionEq = killTeamEquipment.filter(eq => factionEquipment.some(f => f.name === eq.name));
     const selectedUniversalEq = killTeamEquipment.filter(eq => universalEquipment.some(u => u.name === eq.name));
 
-    factionEquipmentAccordionContainer.innerHTML = makeSection('Faction Equipment', selectedFactionEq);
-    universalEquipmentAccordionContainer.innerHTML = makeSection('Universal Equipment', selectedUniversalEq);
+    const factionHTML = makeSection('Faction Equipment', selectedFactionEq);
+    factionEquipmentAccordionContainer.innerHTML = factionHTML;
+    factionEquipmentAccordionContainer.style.display = factionHTML ? 'flex' : 'none';
+
+    const universalHTML = makeSection('Universal Equipment', selectedUniversalEq);
+    universalEquipmentAccordionContainer.innerHTML = universalHTML;
+    universalEquipmentAccordionContainer.style.display = universalHTML ? 'flex' : 'none';
 }
 
 function renderChosenEquipmentCards() {
