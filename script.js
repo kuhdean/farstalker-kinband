@@ -73,7 +73,11 @@ document.addEventListener('DOMContentLoaded', () => {
 // --- ROSTER BUILDER LOGIC ---
 function renderOperativeSelectionGrid() {
     operativeSelectionGrid.innerHTML = '';
-    operativesData.forEach(opData => {
+    const sortedOps = operativesData.slice().sort((a, b) => {
+        if (a.isUnique === b.isUnique) return 0;
+        return a.isUnique ? -1 : 1;
+    });
+    sortedOps.forEach(opData => {
         const tile = document.createElement('div');
         tile.classList.add('operative-tile');
         tile.innerHTML = `<strong>${opData.name}</strong>${opData.isLeader ? ' <span class="leader-tag">Leader</span>' : ''}`;
@@ -97,13 +101,14 @@ function renderEquipmentSelectionGrid() {
         const tile = document.createElement('div');
         tile.classList.add('equipment-tile');
         tile.innerHTML = `<strong>${eq.name}</strong><span class="ep-cost-display">${eq.epCost}EP</span><div class="tile-rules-snippet">${parseKeywords(eq.flavorText)}</div>`;
-        if (killTeamEquipment.some(e => e.name === eq.name)) {
-            tile.classList.add('selected');
-        }
         const inRoster = killTeamEquipment.some(e => e.name === eq.name);
         const epExceeded = gameState.spentEp + eq.epCost > gameState.totalEp;
         const itemLimit = killTeamEquipment.length >= MAX_EQUIPMENT_ITEMS;
-        if (inRoster || epExceeded || itemLimit) {
+
+        if (inRoster) {
+            tile.classList.add('selected');
+            tile.addEventListener('click', () => removeKillTeamEquipment(eq.name));
+        } else if (epExceeded || itemLimit) {
             tile.classList.add('disabled');
         } else {
             tile.addEventListener('click', () => addKillTeamEquipment(eq.name));
@@ -115,7 +120,9 @@ function renderEquipmentSelectionGrid() {
 function updateEquipmentUI() {
     epSpentUI.textContent = gameState.spentEp;
     equipmentSelectedCount.textContent = killTeamEquipment.length;
-    chosenKillTeamEquipmentList.innerHTML = killTeamEquipment.map(eq => `<li>${eq.name}</li>`).join('');
+    chosenKillTeamEquipmentList.innerHTML = killTeamEquipment.map(eq => `
+        <li>${eq.name}<button class="remove-eq-btn" data-name="${eq.name}">X</button></li>
+    `).join('');
     renderEquipmentSelectionGrid();
     renderChosenEquipmentCards();
 }
@@ -142,6 +149,7 @@ function removeKillTeamEquipment(name) {
 }
 
 function showValidationMessage(message, isValid) {
+    if (!validationMessage) return;
     validationMessage.textContent = message;
     if (isValid) {
         validationMessage.classList.remove('error');
@@ -296,6 +304,7 @@ function renderChosenEquipmentCards() {
 
         const cardHTML = `
             <strong>${eq.name} (${eq.epCost}EP)</strong>
+            <button class="remove-eq-btn" data-name="${eq.name}">Remove</button>
             ${eq.flavorText ? `<em class="equipment-flavor-text">${eq.flavorText}</em>` : ''}
             <div class="equipment-rules">${rulesHTML}</div>
             ${actionsHTML ? `<h4>Actions</h4>${actionsHTML}` : ''}
@@ -569,32 +578,6 @@ function removeTooltip() {
     if (existing) existing.remove();
 }
 
-function bindAccordions() {
-    document.querySelectorAll('.accordion').forEach(btn => {
-        const content = btn.nextElementSibling;
-        if (!content) return;
-        btn.onclick = () => {
-            btn.classList.toggle('active');
-            if (btn.classList.contains('active')) {
-                content.style.maxHeight = content.scrollHeight + 'px';
-                const finalize = () => {
-                    content.style.maxHeight = 'none';
-                    content.removeEventListener('transitionend', finalize);
-                };
-                content.addEventListener('transitionend', finalize);
-            if (content.style.maxHeight) {
-                content.style.maxHeight = null;
-            } else {
-                // Set current height to enable closing animation from full size
-                content.style.maxHeight = content.scrollHeight + 'px';
-                requestAnimationFrame(() => {
-                    content.style.maxHeight = '0';
-                });
-ui-redesign
-            }
-        };
-    });
-}
 
 function bindStaticEventListeners() {
     startGameBtn.addEventListener('click', startGame);
@@ -611,9 +594,39 @@ function bindStaticEventListeners() {
             const bar = target.closest('.health-bar');
             handleHealthClick(bar.dataset.id, e, bar);
         }
-        
+
+        else if (target.matches('.remove-eq-btn')) removeKillTeamEquipment(target.dataset.name);
+
         else if (target.matches('.ploy-button')) usePloy(target.dataset.ployName, parseInt(target.dataset.cpCost), target);
         else if (target.matches('.keyword')) showTooltip(target.textContent, e);
         else if (!target.closest('.keyword')) removeTooltip();
+    });
+
+}
+
+function bindAccordions() {
+    document.querySelectorAll('.accordion').forEach(btn => {
+        const content = btn.nextElementSibling;
+        if (!content) return;
+        btn.onclick = () => {
+            btn.classList.toggle('active');
+            if (btn.classList.contains('active')) {
+                content.style.maxHeight = content.scrollHeight + 'px';
+                const finalize = () => {
+                    content.style.maxHeight = 'none';
+                    content.removeEventListener('transitionend', finalize);
+                };
+                content.addEventListener('transitionend', finalize);
+            } else {
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null;
+                } else {
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                    requestAnimationFrame(() => {
+                        content.style.maxHeight = '0';
+                    });
+                }
+            }
+        };
     });
 }
