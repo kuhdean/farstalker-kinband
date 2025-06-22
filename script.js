@@ -16,6 +16,10 @@ const equipmentSelectionGrid = document.getElementById(
   "equipment-selection-grid",
 );
 const rosterListContainer = document.getElementById("roster-list-container");
+const rosterListArea = document.getElementById("your-roster-list");
+const masterSelectionGridArea = document.getElementById(
+  "master-selection-grid-area",
+);
 const rosterCountSpan = document.getElementById("roster-count");
 const validationMessage = document.getElementById("roster-validation-message");
 const startGameBtn = document.getElementById("start-game-btn");
@@ -35,9 +39,6 @@ const cpMessageSpan = document.getElementById("cp-message");
 const vpValueSpan = document.getElementById("vp-value");
 const readyAllBtn = document.getElementById("ready-all-btn");
 const resetRosterBtn = document.getElementById("reset-roster-btn");
-const chosenKillTeamEquipmentList = document.getElementById(
-  "chosen-kill-team-equipment-list",
-);
 const epSpentUI = document.getElementById("ep-spent-ui");
 const equipmentSelectedCount = document.getElementById(
   "equipment-selected-count",
@@ -95,6 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
   bindStaticEventListeners();
   renderRosterList();
   validateFullRoster();
+  syncRosterHeight();
 });
 // --- ROSTER BUILDER LOGIC ---
 function getMaxAllowed(opData) {
@@ -134,25 +136,23 @@ function renderOperativeSelectionGrid() {
     const tile = document.createElement("div");
     tile.classList.add("operative-tile");
     const count = activeRoster.filter((op) => op.id === opData.id).length;
-    tile.innerHTML = `<strong>${opData.name}</strong>${opData.isLeader ? ' <span class="leader-tag">Leader</span>' : ""}${count > 1 ? `<span class="tile-count">${count}</span>` : ""}`;
+
+    // Set the tile's content
+    tile.innerHTML = `<strong>${opData.name}</strong>${opData.isLeader ? ' <span class="leader-tag">Leader</span>' : ""}${count > 0 ? `<span class="tile-count">${count}</span>` : ""}`;
+
+    // Add a 'selected' class if at least one instance is in the roster
     if (count > 0) {
-      tile.classList.add("selected");
+        tile.classList.add("selected");
     }
+
+    // Determine if the tile should be disabled or clickable
     const validation = validateRosterAddition(opData);
-    if (!validation.isValid && count === 0) {
-      tile.classList.add("disabled");
+    if (!validation.isValid && count >= getMaxAllowed(opData)) {
+        tile.classList.add("disabled");
     } else {
-      tile.addEventListener("click", () => handleOperativeTileClick(opData));
-    tile.innerHTML = `<strong>${opData.name}</strong>${opData.isLeader ? ' <span class="leader-tag">Leader</span>' : ""}`;
-    if (activeRoster.some((op) => op.id === opData.id)) {
-      tile.classList.add("selected");
+        tile.addEventListener("click", () => handleOperativeTileClick(opData));
     }
-    const validation = validateRosterAddition(opData);
-    if (!validation.isValid) {
-      tile.classList.add("disabled");
-    } else {
-      tile.addEventListener("click", () => addOperativeToRoster(opData.id));
-    }
+
     operativeSelectionGrid.appendChild(tile);
   });
 }
@@ -184,16 +184,9 @@ function renderEquipmentSelectionGrid() {
 function updateEquipmentUI() {
   epSpentUI.textContent = gameState.spentEp;
   equipmentSelectedCount.textContent = killTeamEquipment.length;
-  chosenKillTeamEquipmentList.innerHTML = killTeamEquipment
-    .map(
-      (eq) => `
-        <li>${eq.name}<button class="remove-eq-btn" data-name="${eq.name}">X</button></li>
-    `,
-    )
-    .join("");
   renderEquipmentSelectionGrid();
-  renderChosenEquipmentCards(false);
-  renderChosenEquipmentCards();
+  renderChosenEquipmentCards(false); // We are in the roster builder, not the game.
+  syncRosterHeight();
 }
 
 function addKillTeamEquipment(name) {
@@ -207,7 +200,6 @@ function addKillTeamEquipment(name) {
   const eqCopy = { ...item };
   if (item.maxUses) eqCopy.used = Array(item.maxUses).fill(false);
   killTeamEquipment.push(eqCopy);
-  killTeamEquipment.push(item);
   gameState.spentEp += item.epCost;
   updateEquipmentUI();
   saveState();
@@ -288,6 +280,12 @@ function renderRosterList() {
     rosterListContainer.appendChild(item);
   });
   rosterCountSpan.textContent = activeRoster.length;
+  syncRosterHeight();
+}
+
+function syncRosterHeight() {
+  if (!rosterListArea || !masterSelectionGridArea) return;
+  rosterListArea.style.maxHeight = masterSelectionGridArea.offsetHeight + "px";
 }
 
 function validateRosterAddition(opData) {
@@ -346,7 +344,6 @@ function startGame() {
 function renderGameView() {
   renderDashboard();
   renderChosenEquipmentCards(true);
-  renderChosenEquipmentCards();
   renderReferenceAccordions();
   renderAllOperativeCards();
 }
@@ -390,64 +387,58 @@ function renderReferenceAccordions() {
 }
 
 function renderChosenEquipmentCards(inGame) {
-function renderChosenEquipmentCards() {
-  if (!chosenEquipmentCardContainer) return;
-  chosenEquipmentCardContainer.innerHTML = "";
+    if (!chosenEquipmentCardContainer) return;
+    chosenEquipmentCardContainer.innerHTML = "";
 
-  killTeamEquipment.forEach((eq) => {
-    const card = document.createElement("div");
-    card.classList.add("chosen-equipment-card");
-    card.title = eq.flavorText || "";
+    killTeamEquipment.forEach((eq) => {
+        const card = document.createElement("div");
+        card.classList.add("chosen-equipment-card");
+        card.title = eq.flavorText || "";
 
-    const rulesHTML = (eq.rules || [])
-      .map((rule) => `<p>${parseKeywords(rule)}</p>`)
-      .join("");
+        const rulesHTML = (eq.rules || [])
+            .map((rule) => `<p>${parseKeywords(rule)}</p>`)
+            .join("");
 
-    const actionsHTML = (eq.uniqueActions || [])
-      .map((action) => {
-        return `<div class="equipment-action"><strong>${action.name}</strong><p>${parseKeywords(action.text)}</p></div>`;
-      })
-      .join("");
+        const actionsHTML = (eq.uniqueActions || [])
+            .map((action) => `<div class="equipment-action"><strong>${action.name}</strong><p>${parseKeywords(action.text)}</p></div>`)
+            .join("");
 
-    const weaponsHTML = (eq.weaponProfiles || [])
-      .map((w) => {
-        return `<tr><td>${w.name}</td><td>${w.atk}</td><td>${w.skill}</td><td>${w.dmg}</td><td>${parseKeywords(w.rules)}</td></tr>`;
-      })
-      .join("");
+        const weaponsHTML = (eq.weaponProfiles || [])
+            .map((w) => `<tr><td>${w.name}</td><td>${w.atk}</td><td>${w.skill}</td><td>${w.dmg}</td><td>${parseKeywords(w.rules)}</td></tr>`)
+            .join("");
 
-    const usesHTML =
-      inGame && eq.maxUses
-        ? `<div class="equipment-uses">${eq.used
-            .map(
-              (u, i) =>
-                `<input type="checkbox" class="eq-use-checkbox" data-name="${eq.name}" data-index="${i}" ${u ? "checked" : ""}>`,
-            )
-            .join("")}</div>`
-        : "";
+        const usesHTML =
+            inGame && eq.maxUses
+                ? `<div class="equipment-uses">${Array.from({ length: eq.maxUses }, (_, i) => {
+                      const isChecked = eq.used && eq.used[i];
+                      return `<input type="checkbox" class="eq-use-checkbox" data-name="${eq.name}" data-index="${i}" ${isChecked ? "checked" : ""}>`;
+                  }).join("")}</div>`
+                : "";
 
-    const removeBtn = !inGame
-      ? `<button class="remove-eq-btn" data-name="${eq.name}">Remove</button>`
-      : "";
+        const removeBtnHTML = !inGame
+            ? `<button class="remove-eq-btn" data-name="${eq.name}">Remove</button>`
+            : "";
 
-    const cardHTML = `
-            <strong>${eq.name} (${eq.epCost}EP)</strong>
-            ${removeBtn}
+        const cardHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <strong>${eq.name} (${eq.epCost}EP)</strong>
+                    ${removeBtnHTML}
+                </div>
+                ${eq.flavorText ? `<em class="equipment-flavor-text">${eq.flavorText}</em>` : ""}
+                <div class="equipment-rules">${rulesHTML}</div>
+                ${actionsHTML ? `<h4>Actions</h4>${actionsHTML}` : ""}
+                ${weaponsHTML ? `<h4>Profiles</h4><table class="weapon-table"><thead><tr><th>Name</th><th>A</th><th>HIT</th><th>D</th><th>Rules</th></tr></thead><tbody>${weaponsHTML}</tbody></table>` : ""}
+                ${usesHTML}
+            `;
 
-    const cardHTML = `
-            <strong>${eq.name} (${eq.epCost}EP)</strong>
-            <button class="remove-eq-btn" data-name="${eq.name}">Remove</button>
-            ${eq.flavorText ? `<em class="equipment-flavor-text">${eq.flavorText}</em>` : ""}
-            <div class="equipment-rules">${rulesHTML}</div>
-            ${actionsHTML ? `<h4>Actions</h4>${actionsHTML}` : ""}
-            ${weaponsHTML ? `<h4>Profiles</h4><table class="weapon-table"><thead><tr><th>Name</th><th>A</th><th>HIT</th><th>D</th><th>Rules</th></tr></thead><tbody>${weaponsHTML}</tbody></table>` : ""}
-            ${usesHTML}
-        `;
+        card.innerHTML = cardHTML;
+        chosenEquipmentCardContainer.appendChild(card);
+    });
 
-    card.innerHTML = cardHTML;
-    chosenEquipmentCardContainer.appendChild(card);
-  });
-
-  bindAccordions();
+    // This function is often called outside the context of the main game view's accordions
+    if (gameTrackerView.style.display !== 'none') {
+        bindAccordions();
+    }
 }
 
 function parseKeywords(rulesString) {
@@ -771,6 +762,7 @@ function bindStaticEventListeners() {
   startGameBtn.addEventListener("click", startGame);
   readyAllBtn.addEventListener("click", readyAllAndNextTurn);
   resetRosterBtn.addEventListener("click", resetRoster);
+  window.addEventListener("resize", syncRosterHeight);
 
   document.body.addEventListener("click", (e) => {
     const target = e.target;

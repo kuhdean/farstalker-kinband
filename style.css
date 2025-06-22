@@ -159,17 +159,35 @@ button:hover {
 }
 .view-container {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: flex-start;
   gap: 20px;
 }
 #available-operatives-pool,
 #your-roster-list {
-  width: 100%;
   background: var(--card-bg-main);
   padding: 20px;
   border-radius: 2px;
   border: 1px solid var(--card-border-color);
   box-shadow: var(--card-shadow);
+}
+
+#available-operatives-pool {
+  flex: 1;
+}
+
+#your-roster-list {
+  width: 280px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Add this new rule to make the list scrollable */
+#roster-list-container {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding-right: 5px;
 }
 
 /* --- ROSTER BUILDER --- */
@@ -259,7 +277,7 @@ button:hover {
 
 /* --- ROSTER BUILDER: TILE & GRID LAYOUT --- */
 #master-selection-grid-area {
-  width: 100%;
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -394,20 +412,7 @@ button:hover {
 
 /* Your Roster List Area */
 #your-roster-list {
-  width: 100%;
   margin-top: 20px;
-}
-#chosen-kill-team-equipment-list {
-  list-style: none;
-  padding-left: 0;
-}
-#chosen-kill-team-equipment-list li {
-  background-color: var(--card-section-bg);
-  border: 1px solid var(--card-border-light);
-  padding: 5px 8px;
-  margin-bottom: 5px;
-  border-radius: 2px;
-  font-size: 0.9em;
 }
 
 /* --- GAME TRACKER DASHBOARD --- */
