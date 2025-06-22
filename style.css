@@ -753,11 +753,19 @@ button:hover {
     margin-bottom: 0;
 }
 .order-toggle.conceal {
+
+    background-color: var(--accent-color-primary);
+    color: #000000;
+}
+.order-toggle.engage {
+    background-color: var(--accent-color-secondary);
+
     background-color: #333333;
     color: #ffffff;
 }
 .order-toggle.engage {
     background-color: var(--accent-color-primary);
+
     color: #000000;
 }
 .order-toggle:hover, .activation-status:hover {
@@ -864,10 +872,17 @@ button:hover {
     background-color: var(--text-color-secondary);
 }
 .operative-card.order-conceal {
+codex/update-database-and-readme-for-accuracy
+    border-color: var(--accent-color-primary);
+}
+.operative-card.order-engage {
+    border-color: var(--accent-color-secondary);
+
     border-color: var(--accent-color-secondary);
 }
 .operative-card.order-engage {
     border-color: var(--accent-color-primary);
+ui-redesign
 }
 #start-game-btn:disabled { background-color: #ccc; cursor: not-allowed; }
 
