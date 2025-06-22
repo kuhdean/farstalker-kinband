@@ -164,7 +164,7 @@ button:hover {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 20px;
+  gap: 10px;
   flex: 1;
   min-height: 0;
 }
@@ -186,17 +186,19 @@ button:hover {
 }
 
 #your-roster-list {
+  margin-top: 0;
+  padding: 10px;
   margin-top: 20px;
 }
 #roster-list-container {
   flex-grow: 1;
   display: grid;
+  grid-template-columns: repeat(6, 1fr);
   grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
   grid-auto-rows: auto;
   gap: 10px;
-  padding: 0 5px;
+  padding: 0;
   overflow-y: auto;
-  padding-right: 5px;
   min-height: 0;
   scrollbar-width: thin; /* Firefox */
   scrollbar-color: var(--accent-color-primary) var(--card-section-bg);
