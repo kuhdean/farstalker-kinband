@@ -96,7 +96,6 @@ document.addEventListener("DOMContentLoaded", () => {
   bindStaticEventListeners();
   renderRosterList();
   validateFullRoster();
-  syncRosterHeight();
 });
 // --- ROSTER BUILDER LOGIC ---
 function getMaxAllowed(opData) {
@@ -186,7 +185,6 @@ function updateEquipmentUI() {
   equipmentSelectedCount.textContent = killTeamEquipment.length;
   renderEquipmentSelectionGrid();
   renderChosenEquipmentCards(false); // We are in the roster builder, not the game.
-  syncRosterHeight();
 }
 
 function addKillTeamEquipment(name) {
@@ -262,31 +260,30 @@ function removeOperativeFromRoster(instanceId) {
 
 function renderRosterList() {
   rosterListContainer.innerHTML = "";
-  activeRoster.forEach((op) => {
-    const item = document.createElement("div");
-    item.classList.add("roster-item");
-    item.innerHTML = `
-            <div>
-                <span>${op.name}</span>
-            </div>
-            <div>
-                <button class="remove-op-btn" data-id="${op.instanceId}">X</button>
-            </div>`;
-    item
-      .querySelector(".remove-op-btn")
-      .addEventListener("click", () =>
-        removeOperativeFromRoster(op.instanceId),
-      );
-    rosterListContainer.appendChild(item);
-  });
+  for (let i = 0; i < 12; i++) {
+    const op = activeRoster[i];
+    const cell = document.createElement("div");
+    cell.classList.add("roster-square");
+    if (op) {
+      cell.innerHTML = `
+        <div class="roster-info">
+          <strong>${op.name}</strong>
+          <small>APL ${op.stats.apl}, W ${op.stats.wounds}</small>
+        </div>
+        <button class="remove-op-btn" data-id="${op.instanceId}" title="Remove">✖</button>`;
+      cell
+        .querySelector(".remove-op-btn")
+        .addEventListener("click", () =>
+          removeOperativeFromRoster(op.instanceId),
+        );
+    } else {
+      cell.classList.add("empty");
+    }
+    rosterListContainer.appendChild(cell);
+  }
   rosterCountSpan.textContent = activeRoster.length;
-  syncRosterHeight();
 }
 
-function syncRosterHeight() {
-  if (!rosterListArea || !masterSelectionGridArea) return;
-  rosterListArea.style.maxHeight = masterSelectionGridArea.offsetHeight + "px";
-}
 
 function validateRosterAddition(opData) {
   if (activeRoster.length >= 12)
@@ -762,7 +759,6 @@ function bindStaticEventListeners() {
   startGameBtn.addEventListener("click", startGame);
   readyAllBtn.addEventListener("click", readyAllAndNextTurn);
   resetRosterBtn.addEventListener("click", resetRoster);
-  window.addEventListener("resize", syncRosterHeight);
 
   document.body.addEventListener("click", (e) => {
     const target = e.target;
