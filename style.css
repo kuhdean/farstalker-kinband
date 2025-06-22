@@ -91,7 +91,7 @@ body {
     to { background-position: 0 -40px; }
 }*/
 
-h1, h2, h3 { margin-top: 0; margin-bottom: 0.5em; font-family: 'Share Tech Mono', monospace; text-shadow: none; }
+h1, h2, h3 { margin-top: 0; margin-bottom: 0.5em; font-family: 'Poppins', sans-serif; text-shadow: none; }
 header { background-color: var(--card-header-bg); color: var(--card-header-text); padding: 15px 25px; margin-bottom: 20px; border: 1px solid var(--accent-color-primary); box-shadow: var(--card-shadow); display: flex; justify-content: space-between; align-items: center; }
 h1 { font-size: 2.5em; }
 h2 { font-size: 2em; }
@@ -150,6 +150,7 @@ button:hover {
     margin-bottom: 5px;
 }
 .remove-op-btn { color: var(--injured-color-border); font-weight: bold; background: none; font-size: 1.2em; }
+.remove-eq-btn { color: var(--injured-color-border); background: none; border: none; cursor: pointer; font-size: 0.9em; margin-left: 6px; }
 
 /* --- ROSTER BUILDER: TILE & GRID LAYOUT --- */
 #master-selection-grid-area {
@@ -397,6 +398,10 @@ button:hover {
     display: block;
     margin-bottom: 0;
     font-size: 1.1em;
+}
+.chosen-equipment-card .remove-eq-btn {
+    align-self: flex-end;
+    margin-top: -4px;
 }
 
 .equipment-flavor-text {
