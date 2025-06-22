@@ -307,10 +307,22 @@ button:hover {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px;
-  background-color: var(--card-bg-main);
+  gap: 10px;
+  padding: 8px;
+  background-color: var(--card-section-bg);
   border: 1px solid var(--accent-color-primary);
-  margin-bottom: 5px;
+  border-radius: 2px;
+  margin-bottom: 8px;
+  font-size: 0.9em;
+}
+.roster-info {
+  display: flex;
+  flex-direction: column;
+}
+.empty-roster {
+  text-align: center;
+  color: var(--text-color-secondary);
+  padding: 20px;
 }
 .remove-op-btn {
   color: var(--injured-color-border);
