@@ -96,7 +96,6 @@ document.addEventListener("DOMContentLoaded", () => {
   bindStaticEventListeners();
   renderRosterList();
   validateFullRoster();
-  syncRosterHeight();
 });
 // --- ROSTER BUILDER LOGIC ---
 function getMaxAllowed(opData) {
@@ -186,7 +185,6 @@ function updateEquipmentUI() {
   equipmentSelectedCount.textContent = killTeamEquipment.length;
   renderEquipmentSelectionGrid();
   renderChosenEquipmentCards(false); // We are in the roster builder, not the game.
-  syncRosterHeight();
 }
 
 function addKillTeamEquipment(name) {
@@ -277,16 +275,11 @@ function renderRosterList() {
       .addEventListener("click", () =>
         removeOperativeFromRoster(op.instanceId),
       );
-    rosterListContainer.appendChild(item);
+  rosterListContainer.appendChild(item);
   });
   rosterCountSpan.textContent = activeRoster.length;
-  syncRosterHeight();
 }
 
-function syncRosterHeight() {
-  if (!rosterListArea || !masterSelectionGridArea) return;
-  rosterListArea.style.maxHeight = masterSelectionGridArea.offsetHeight + "px";
-}
 
 function validateRosterAddition(opData) {
   if (activeRoster.length >= 12)
@@ -762,7 +755,6 @@ function bindStaticEventListeners() {
   startGameBtn.addEventListener("click", startGame);
   readyAllBtn.addEventListener("click", readyAllAndNextTurn);
   resetRosterBtn.addEventListener("click", resetRoster);
-  window.addEventListener("resize", syncRosterHeight);
 
   document.body.addEventListener("click", (e) => {
     const target = e.target;
