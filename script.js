@@ -582,12 +582,15 @@ function bindAccordions() {
                     content.removeEventListener('transitionend', finalize);
                 };
                 content.addEventListener('transitionend', finalize);
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null;
             } else {
                 // Set current height to enable closing animation from full size
                 content.style.maxHeight = content.scrollHeight + 'px';
                 requestAnimationFrame(() => {
                     content.style.maxHeight = '0';
                 });
+ui-redesign
             }
         };
     });
