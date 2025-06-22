@@ -182,7 +182,6 @@ button:hover {
   display: flex;
   flex-direction: column;
 }
-
 /* Add this new rule to make the list scrollable */
 #roster-list-container {
   flex-grow: 1;
