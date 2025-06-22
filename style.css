@@ -188,11 +188,13 @@ button:hover {
 #your-roster-list {
   margin-top: 0;
   padding: 10px;
+  margin-top: 20px;
 }
 #roster-list-container {
   flex-grow: 1;
   display: grid;
   grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
   grid-auto-rows: auto;
   gap: 10px;
   padding: 0;
