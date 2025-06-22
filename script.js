@@ -20,8 +20,6 @@ const activeCardsContainer = document.getElementById('active-operative-cards');
 const factionRulesAccordionContainer = document.getElementById('faction-rules-accordion-container');
 const strategicPloysAccordionContainer = document.getElementById('strategic-ploys-accordion-container');
 const firefightPloysAccordionContainer = document.getElementById('firefight-ploys-accordion-container');
-const factionEquipmentAccordionContainer = document.getElementById('faction-equipment-accordion-container');
-const universalEquipmentAccordionContainer = document.getElementById('universal-equipment-accordion-container');
 const turnValueSpan = document.getElementById('turn-value');
 const cpValueSpan = document.getElementById('cp-value');
 const cpMessageSpan = document.getElementById('cp-message');
@@ -277,18 +275,6 @@ function renderReferenceAccordions() {
     factionRulesAccordionContainer.innerHTML = makeSection('Faction Rules', factionRules);
     strategicPloysAccordionContainer.innerHTML = makeSection('Strategic Ploys', strategicPloys, true);
     firefightPloysAccordionContainer.innerHTML = makeSection('Firefight Ploys', firefightPloys, true);
-    // Equipment reference sections are deprecated; only the selected
-    // equipment datacards are shown in the tracker.
-    const selectedFactionEq = killTeamEquipment.filter(eq => factionEquipment.some(f => f.name === eq.name));
-    const selectedUniversalEq = killTeamEquipment.filter(eq => universalEquipment.some(u => u.name === eq.name));
-
-    const factionHTML = makeSection('Faction Equipment', selectedFactionEq);
-    factionEquipmentAccordionContainer.innerHTML = factionHTML;
-    factionEquipmentAccordionContainer.style.display = factionHTML ? 'flex' : 'none';
-
-    const universalHTML = makeSection('Universal Equipment', selectedUniversalEq);
-    universalEquipmentAccordionContainer.innerHTML = universalHTML;
-    universalEquipmentAccordionContainer.style.display = universalHTML ? 'flex' : 'none';
 }
 
 function renderChosenEquipmentCards() {
