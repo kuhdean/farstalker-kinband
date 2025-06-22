@@ -130,6 +130,9 @@ button:hover {
 /* Cogitator inspired styling */
 #roster-builder-view.crt-mode {
     font-family: 'Share Tech Mono', monospace;
+    color: var(--accent-color-primary);
+    position: relative;
+    font-size: 0.9em;
     color: #8aff80;
     position: relative;
 }
@@ -149,6 +152,8 @@ button:hover {
     opacity: 0.05;
 }
 #roster-builder-view.crt-mode header {
+    border-color: var(--accent-color-primary);
+    color: var(--accent-color-primary);
     border-color: #8aff80;
     color: #8aff80;
 }

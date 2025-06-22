@@ -100,6 +100,7 @@ function renderEquipmentSelectionGrid() {
     allEquip.forEach(eq => {
         const tile = document.createElement('div');
         tile.classList.add('equipment-tile');
+        tile.title = eq.flavorText || '';
         tile.innerHTML = `<strong>${eq.name}</strong><span class="ep-cost-display">${eq.epCost}EP</span><div class="tile-rules-snippet">${parseKeywords(eq.flavorText)}</div>`;
         const inRoster = killTeamEquipment.some(e => e.name === eq.name);
         const epExceeded = gameState.spentEp + eq.epCost > gameState.totalEp;
@@ -291,6 +292,7 @@ function renderChosenEquipmentCards() {
     killTeamEquipment.forEach(eq => {
         const card = document.createElement('div');
         card.classList.add('chosen-equipment-card');
+        card.title = eq.flavorText || '';
 
         const rulesHTML = (eq.rules || []).map(rule => `<p>${parseKeywords(rule)}</p>`).join('');
 
