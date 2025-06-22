@@ -362,9 +362,7 @@ button:hover {
 /* Let reference sections span full width like the equipment section */
 #faction-rules-accordion-container,
 #strategic-ploys-accordion-container,
-#firefight-ploys-accordion-container,
-#faction-equipment-accordion-container,
-#universal-equipment-accordion-container {
+#firefight-ploys-accordion-container {
     grid-column: 1 / -1;
 }
 
