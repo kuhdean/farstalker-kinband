@@ -162,7 +162,6 @@ button:hover {
 }
 .view-container {
   display: flex;
-  flex-direction: column;
   flex-direction: row;
   align-items: stretch;
   gap: 20px;
@@ -187,21 +186,24 @@ button:hover {
 }
 
 #your-roster-list {
-  width: 100%;
+  width: 320px; /* Give the column a fixed, reasonable width */
+  flex-shrink: 0; /* Prevent the column from shrinking */
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: 100%; /* Ensure it tries to fill the parent's height */
+  min-height: 0; /* Crucial for allowing flex children to scroll */
 }
 #roster-list-container {
+  margin-top: auto; /* Keep the roster squares at the bottom */
   flex-grow: 1;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  grid-auto-rows: 1fr; /* Ensure the squares scale evenly */
   gap: 10px;
   padding: 0 5px;
   overflow-y: auto;
   padding-right: 5px;
   min-height: 0;
-  max-height: 80vh;
   scrollbar-width: thin; /* Firefox */
   scrollbar-color: var(--accent-color-primary) var(--card-section-bg);
 }
