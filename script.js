@@ -16,6 +16,10 @@ const equipmentSelectionGrid = document.getElementById(
   "equipment-selection-grid",
 );
 const rosterListContainer = document.getElementById("roster-list-container");
+const rosterListArea = document.getElementById("your-roster-list");
+const masterSelectionGridArea = document.getElementById(
+  "master-selection-grid-area",
+);
 const rosterCountSpan = document.getElementById("roster-count");
 const validationMessage = document.getElementById("roster-validation-message");
 const startGameBtn = document.getElementById("start-game-btn");
@@ -35,9 +39,6 @@ const cpMessageSpan = document.getElementById("cp-message");
 const vpValueSpan = document.getElementById("vp-value");
 const readyAllBtn = document.getElementById("ready-all-btn");
 const resetRosterBtn = document.getElementById("reset-roster-btn");
-const chosenKillTeamEquipmentList = document.getElementById(
-  "chosen-kill-team-equipment-list",
-);
 const epSpentUI = document.getElementById("ep-spent-ui");
 const equipmentSelectedCount = document.getElementById(
   "equipment-selected-count",
@@ -95,6 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
   bindStaticEventListeners();
   renderRosterList();
   validateFullRoster();
+  syncRosterHeight();
 });
 // --- ROSTER BUILDER LOGIC ---
 function getMaxAllowed(opData) {
@@ -182,15 +184,10 @@ function renderEquipmentSelectionGrid() {
 function updateEquipmentUI() {
   epSpentUI.textContent = gameState.spentEp;
   equipmentSelectedCount.textContent = killTeamEquipment.length;
-  chosenKillTeamEquipmentList.innerHTML = killTeamEquipment
-    .map(
-      (eq) => `
-        <li>${eq.name}<button class="remove-eq-btn" data-name="${eq.name}">X</button></li>
-    `,
-    )
-    .join("");
   renderEquipmentSelectionGrid();
   renderChosenEquipmentCards(false); // We are in the roster builder, not the game.
+  syncRosterHeight();
+
 }
 
 function addKillTeamEquipment(name) {
@@ -284,6 +281,12 @@ function renderRosterList() {
     rosterListContainer.appendChild(item);
   });
   rosterCountSpan.textContent = activeRoster.length;
+  syncRosterHeight();
+}
+
+function syncRosterHeight() {
+  if (!rosterListArea || !masterSelectionGridArea) return;
+  rosterListArea.style.maxHeight = masterSelectionGridArea.offsetHeight + "px";
 }
 
 function validateRosterAddition(opData) {
@@ -760,6 +763,7 @@ function bindStaticEventListeners() {
   startGameBtn.addEventListener("click", startGame);
   readyAllBtn.addEventListener("click", readyAllAndNextTurn);
   resetRosterBtn.addEventListener("click", resetRoster);
+  window.addEventListener("resize", syncRosterHeight);
 
   document.body.addEventListener("click", (e) => {
     const target = e.target;
