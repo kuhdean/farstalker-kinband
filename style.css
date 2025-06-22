@@ -133,6 +133,8 @@ button:hover {
     color: var(--accent-color-primary);
     position: relative;
     font-size: 0.9em;
+    color: #8aff80;
+    position: relative;
 }
 #roster-builder-view.crt-mode::after {
     content: '';
@@ -152,6 +154,8 @@ button:hover {
 #roster-builder-view.crt-mode header {
     border-color: var(--accent-color-primary);
     color: var(--accent-color-primary);
+    border-color: #8aff80;
+    color: #8aff80;
 }
 #roster-builder-view.crt-mode h2,
 #roster-builder-view.crt-mode h3,
