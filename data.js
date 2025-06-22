@@ -26,7 +26,7 @@ const keywordGlossary = {
   'Torrent X"':
     "This weapon makes a shooting attack against the primary target and every other operative within X\" of it and within this weapon's range.",
   Relentless: "You can re-roll any of your attack dice.",
-  Seek: "When selecting a valid target, operatives with a Conceal order cannot use terrain for cover. If the rule is Seek Light, they cannot use Light terrain for cover. While this can allow operatives to be targeted (if visible), it doesn’t remove their cover save.",
+  Seek: "When selecting a valid target, operatives with a Conceal order cannot use terrain for cover. If the rule is Seek Light, they cannot use Light terrain for cover. While this can allow operatives to be targeted (if visible), it doesn’t remove their cover save (if any).",
   "Seek Light":
     "Operatives with a Conceal order cannot use Light terrain for cover when selected as a valid target.",
   Severe:
