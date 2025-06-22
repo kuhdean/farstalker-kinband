@@ -415,10 +415,11 @@ function renderAllOperativeCards() {
 }
 
 
-function handleHealthClick(instanceId, event) {
-    const bar = event.currentTarget;
-    const clickX = event.offsetX;
-    const barWidth = bar.clientWidth;
+function handleHealthClick(instanceId, event, barEl) {
+    const bar = barEl || event.currentTarget;
+    const rect = bar.getBoundingClientRect();
+    const clickX = event.clientX - rect.left;
+    const barWidth = rect.width;
     const amount = (clickX > barWidth / 2) ? -1 : 1;
     changeWounds(instanceId, amount);
 }
@@ -574,12 +575,19 @@ function bindAccordions() {
         if (!content) return;
         btn.onclick = () => {
             btn.classList.toggle('active');
-            if (content.style.maxHeight) {
-                content.style.maxHeight = null;
-                content.classList.remove('open');
-            } else {
+            if (btn.classList.contains('active')) {
                 content.style.maxHeight = content.scrollHeight + 'px';
-                content.classList.add('open');
+                const finalize = () => {
+                    content.style.maxHeight = 'none';
+                    content.removeEventListener('transitionend', finalize);
+                };
+                content.addEventListener('transitionend', finalize);
+            } else {
+                // Set current height to enable closing animation from full size
+                content.style.maxHeight = content.scrollHeight + 'px';
+                requestAnimationFrame(() => {
+                    content.style.maxHeight = '0';
+                });
             }
         };
     });
@@ -598,7 +606,7 @@ function bindStaticEventListeners() {
         else if (target.matches('.activation-status')) toggleActivation(target.dataset.id);
         else if (target.closest('.health-bar')) {
             const bar = target.closest('.health-bar');
-            handleHealthClick(bar.dataset.id, e);
+            handleHealthClick(bar.dataset.id, e, bar);
         }
         
         else if (target.matches('.ploy-button')) usePloy(target.dataset.ployName, parseInt(target.dataset.cpCost), target);
