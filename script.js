@@ -96,8 +96,34 @@ document.addEventListener("DOMContentLoaded", () => {
   renderRosterList();
   validateFullRoster();
 });
-
 // --- ROSTER BUILDER LOGIC ---
+function getMaxAllowed(opData) {
+  if (opData.id === "hound") return 2;
+  if (opData.isLeader || opData.isUnique) return 1;
+  return 12;
+}
+
+function removeOneOperative(opId) {
+  const idx = activeRoster.findIndex((op) => op.id === opId);
+  if (idx !== -1) {
+    activeRoster.splice(idx, 1);
+    renderRosterList();
+    renderOperativeSelectionGrid();
+    updateEquipmentUI();
+    validateFullRoster();
+    saveState();
+  }
+}
+
+function handleOperativeTileClick(opData) {
+  const count = activeRoster.filter((op) => op.id === opData.id).length;
+  const max = getMaxAllowed(opData);
+  if (count < max && activeRoster.length < 12) {
+    addOperativeToRoster(opData.id);
+  } else {
+    removeOneOperative(opData.id);
+  }
+}
 function renderOperativeSelectionGrid() {
   operativeSelectionGrid.innerHTML = "";
   const sortedOps = operativesData.slice().sort((a, b) => {
@@ -107,6 +133,16 @@ function renderOperativeSelectionGrid() {
   sortedOps.forEach((opData) => {
     const tile = document.createElement("div");
     tile.classList.add("operative-tile");
+    const count = activeRoster.filter((op) => op.id === opData.id).length;
+    tile.innerHTML = `<strong>${opData.name}</strong>${opData.isLeader ? ' <span class="leader-tag">Leader</span>' : ""}${count > 1 ? `<span class="tile-count">${count}</span>` : ""}`;
+    if (count > 0) {
+      tile.classList.add("selected");
+    }
+    const validation = validateRosterAddition(opData);
+    if (!validation.isValid && count === 0) {
+      tile.classList.add("disabled");
+    } else {
+      tile.addEventListener("click", () => handleOperativeTileClick(opData));
     tile.innerHTML = `<strong>${opData.name}</strong>${opData.isLeader ? ' <span class="leader-tag">Leader</span>' : ""}`;
     if (activeRoster.some((op) => op.id === opData.id)) {
       tile.classList.add("selected");
@@ -156,6 +192,7 @@ function updateEquipmentUI() {
     )
     .join("");
   renderEquipmentSelectionGrid();
+  renderChosenEquipmentCards(false);
   renderChosenEquipmentCards();
 }
 
@@ -167,6 +204,9 @@ function addKillTeamEquipment(name) {
   if (killTeamEquipment.length >= MAX_EQUIPMENT_ITEMS) return;
   if (gameState.spentEp + item.epCost > gameState.totalEp) return;
   if (killTeamEquipment.some((eq) => eq.name === name)) return;
+  const eqCopy = { ...item };
+  if (item.maxUses) eqCopy.used = Array(item.maxUses).fill(false);
+  killTeamEquipment.push(eqCopy);
   killTeamEquipment.push(item);
   gameState.spentEp += item.epCost;
   updateEquipmentUI();
@@ -305,6 +345,7 @@ function startGame() {
 
 function renderGameView() {
   renderDashboard();
+  renderChosenEquipmentCards(true);
   renderChosenEquipmentCards();
   renderReferenceAccordions();
   renderAllOperativeCards();
@@ -348,6 +389,7 @@ function renderReferenceAccordions() {
   bindAccordions();
 }
 
+function renderChosenEquipmentCards(inGame) {
 function renderChosenEquipmentCards() {
   if (!chosenEquipmentCardContainer) return;
   chosenEquipmentCardContainer.innerHTML = "";
@@ -373,6 +415,24 @@ function renderChosenEquipmentCards() {
       })
       .join("");
 
+    const usesHTML =
+      inGame && eq.maxUses
+        ? `<div class="equipment-uses">${eq.used
+            .map(
+              (u, i) =>
+                `<input type="checkbox" class="eq-use-checkbox" data-name="${eq.name}" data-index="${i}" ${u ? "checked" : ""}>`,
+            )
+            .join("")}</div>`
+        : "";
+
+    const removeBtn = !inGame
+      ? `<button class="remove-eq-btn" data-name="${eq.name}">Remove</button>`
+      : "";
+
+    const cardHTML = `
+            <strong>${eq.name} (${eq.epCost}EP)</strong>
+            ${removeBtn}
+
     const cardHTML = `
             <strong>${eq.name} (${eq.epCost}EP)</strong>
             <button class="remove-eq-btn" data-name="${eq.name}">Remove</button>
@@ -380,6 +440,7 @@ function renderChosenEquipmentCards() {
             <div class="equipment-rules">${rulesHTML}</div>
             ${actionsHTML ? `<h4>Actions</h4>${actionsHTML}` : ""}
             ${weaponsHTML ? `<h4>Profiles</h4><table class="weapon-table"><thead><tr><th>Name</th><th>A</th><th>HIT</th><th>D</th><th>Rules</th></tr></thead><tbody>${weaponsHTML}</tbody></table>` : ""}
+            ${usesHTML}
         `;
 
     card.innerHTML = cardHTML;
@@ -554,6 +615,13 @@ function changeWounds(instanceId, amount) {
   saveState();
 }
 
+function toggleEquipmentUse(name, index, checked) {
+  const eq = killTeamEquipment.find((e) => e.name === name);
+  if (!eq || !Array.isArray(eq.used)) return;
+  eq.used[index] = checked;
+  saveState();
+}
+
 function toggleOrder(instanceId) {
   const operative = activeRoster.find((op) => op.instanceId == instanceId);
   if (!operative) return;
@@ -722,6 +790,15 @@ function bindStaticEventListeners() {
       usePloy(target.dataset.ployName, parseInt(target.dataset.cpCost), target);
     else if (target.matches(".keyword")) showTooltip(target.textContent, e);
     else if (!target.closest(".keyword")) removeTooltip();
+  });
+  document.body.addEventListener("change", (e) => {
+    const target = e.target;
+    if (target.matches(".eq-use-checkbox"))
+      toggleEquipmentUse(
+        target.dataset.name,
+        parseInt(target.dataset.index),
+        target.checked,
+      );
   });
 }
 

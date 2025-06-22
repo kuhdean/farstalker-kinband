@@ -162,6 +162,7 @@ const universalEquipment = [
   {
     name: "Utility Grenades",
     epCost: 3,
+    maxUses: 2,
     flavorText:
       "From neuro-suppressant psybombs to smoke-belching chemical charges, grenades of this sort can suppress the enemy and be the difference between life and death.",
     rules: [
@@ -181,6 +182,7 @@ const universalEquipment = [
   {
     name: "Explosive Grenades",
     epCost: 3,
+    maxUses: 2,
     flavorText:
       "A variety of offensive grenades are employed by the forces of the 41st Millennium. These range from simple fragmentation grenades to plasma and gravitic concussion grenades, while even more exotic devices are used to crack open enemy armour.",
     rules: [
@@ -241,6 +243,7 @@ const universalEquipment = [
   {
     name: "Mines",
     epCost: 2,
+    maxUses: 1,
     flavorText:
       "The battlefields of the 41st Millennium are plagued by myriad types of mine, from simple frag charges to monofilament web-snares and microplasma charges. Ultimately, all serve a similar, horrible purpose.",
     rules: [
@@ -250,6 +253,8 @@ const universalEquipment = [
   {
     name: "Light Barricades",
     epCost: 1,
+    maxUses: 1,
+  ui-redesign
     flavorText:
       "Designed to be lugged into place and then deployed by operatives and combat engineers, these barriers are proof against small arms fire.",
     rules: [
@@ -259,6 +264,8 @@ const universalEquipment = [
   {
     name: "Heavy Barricade",
     epCost: 2,
+
+    maxUses: 1,
     flavorText:
       "A redoubtable slab of plasteel and adamantine, this layered protective barrier provides shelter amidst the fiercest firefights.",
     rules: [
