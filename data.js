@@ -182,7 +182,7 @@ const universalEquipment = [
         ]
     },
     {
-        name: 'Ladders',
+        name: '2x Ladders',
         epCost: 1,
         flavorText: 'Carried into battle in their compacted forms, these ladders provide a rapid route of ingress to strongholds, or access to vital vantage points.',
         rules: [
