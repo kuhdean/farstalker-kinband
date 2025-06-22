@@ -96,7 +96,6 @@ document.addEventListener("DOMContentLoaded", () => {
   renderRosterList();
   validateFullRoster();
 });
-
 // --- ROSTER BUILDER LOGIC ---
 function getMaxAllowed(opData) {
   if (opData.id === "hound") return 2;
@@ -125,7 +124,6 @@ function handleOperativeTileClick(opData) {
     removeOneOperative(opData.id);
   }
 }
-
 function renderOperativeSelectionGrid() {
   operativeSelectionGrid.innerHTML = "";
   const sortedOps = operativesData.slice().sort((a, b) => {
@@ -145,6 +143,15 @@ function renderOperativeSelectionGrid() {
       tile.classList.add("disabled");
     } else {
       tile.addEventListener("click", () => handleOperativeTileClick(opData));
+    tile.innerHTML = `<strong>${opData.name}</strong>${opData.isLeader ? ' <span class="leader-tag">Leader</span>' : ""}`;
+    if (activeRoster.some((op) => op.id === opData.id)) {
+      tile.classList.add("selected");
+    }
+    const validation = validateRosterAddition(opData);
+    if (!validation.isValid) {
+      tile.classList.add("disabled");
+    } else {
+      tile.addEventListener("click", () => addOperativeToRoster(opData.id));
     }
     operativeSelectionGrid.appendChild(tile);
   });
@@ -186,6 +193,7 @@ function updateEquipmentUI() {
     .join("");
   renderEquipmentSelectionGrid();
   renderChosenEquipmentCards(false);
+  renderChosenEquipmentCards();
 }
 
 function addKillTeamEquipment(name) {
@@ -199,6 +207,7 @@ function addKillTeamEquipment(name) {
   const eqCopy = { ...item };
   if (item.maxUses) eqCopy.used = Array(item.maxUses).fill(false);
   killTeamEquipment.push(eqCopy);
+  killTeamEquipment.push(item);
   gameState.spentEp += item.epCost;
   updateEquipmentUI();
   saveState();
@@ -337,6 +346,7 @@ function startGame() {
 function renderGameView() {
   renderDashboard();
   renderChosenEquipmentCards(true);
+  renderChosenEquipmentCards();
   renderReferenceAccordions();
   renderAllOperativeCards();
 }
@@ -380,6 +390,7 @@ function renderReferenceAccordions() {
 }
 
 function renderChosenEquipmentCards(inGame) {
+function renderChosenEquipmentCards() {
   if (!chosenEquipmentCardContainer) return;
   chosenEquipmentCardContainer.innerHTML = "";
 
@@ -421,6 +432,10 @@ function renderChosenEquipmentCards(inGame) {
     const cardHTML = `
             <strong>${eq.name} (${eq.epCost}EP)</strong>
             ${removeBtn}
+
+    const cardHTML = `
+            <strong>${eq.name} (${eq.epCost}EP)</strong>
+            <button class="remove-eq-btn" data-name="${eq.name}">Remove</button>
             ${eq.flavorText ? `<em class="equipment-flavor-text">${eq.flavorText}</em>` : ""}
             <div class="equipment-rules">${rulesHTML}</div>
             ${actionsHTML ? `<h4>Actions</h4>${actionsHTML}` : ""}
@@ -776,7 +791,6 @@ function bindStaticEventListeners() {
     else if (target.matches(".keyword")) showTooltip(target.textContent, e);
     else if (!target.closest(".keyword")) removeTooltip();
   });
-
   document.body.addEventListener("change", (e) => {
     const target = e.target;
     if (target.matches(".eq-use-checkbox"))

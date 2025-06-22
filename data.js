@@ -254,6 +254,7 @@ const universalEquipment = [
     name: "Light Barricades",
     epCost: 1,
     maxUses: 1,
+  ui-redesign
     flavorText:
       "Designed to be lugged into place and then deployed by operatives and combat engineers, these barriers are proof against small arms fire.",
     rules: [
@@ -263,6 +264,7 @@ const universalEquipment = [
   {
     name: "Heavy Barricade",
     epCost: 2,
+
     maxUses: 1,
     flavorText:
       "A redoubtable slab of plasteel and adamantine, this layered protective barrier provides shelter amidst the fiercest firefights.",
