@@ -569,32 +569,6 @@ function removeTooltip() {
     if (existing) existing.remove();
 }
 
-function bindAccordions() {
-    document.querySelectorAll('.accordion').forEach(btn => {
-        const content = btn.nextElementSibling;
-        if (!content) return;
-        btn.onclick = () => {
-            btn.classList.toggle('active');
-            if (btn.classList.contains('active')) {
-                content.style.maxHeight = content.scrollHeight + 'px';
-                const finalize = () => {
-                    content.style.maxHeight = 'none';
-                    content.removeEventListener('transitionend', finalize);
-                };
-                content.addEventListener('transitionend', finalize);
-            if (content.style.maxHeight) {
-                content.style.maxHeight = null;
-            } else {
-                // Set current height to enable closing animation from full size
-                content.style.maxHeight = content.scrollHeight + 'px';
-                requestAnimationFrame(() => {
-                    content.style.maxHeight = '0';
-                });
-ui-redesign
-            }
-        };
-    });
-}
 
 function bindStaticEventListeners() {
     startGameBtn.addEventListener('click', startGame);
@@ -615,5 +589,33 @@ function bindStaticEventListeners() {
         else if (target.matches('.ploy-button')) usePloy(target.dataset.ployName, parseInt(target.dataset.cpCost), target);
         else if (target.matches('.keyword')) showTooltip(target.textContent, e);
         else if (!target.closest('.keyword')) removeTooltip();
+    });
+
+}
+
+function bindAccordions() {
+    document.querySelectorAll('.accordion').forEach(btn => {
+        const content = btn.nextElementSibling;
+        if (!content) return;
+        btn.onclick = () => {
+            btn.classList.toggle('active');
+            if (btn.classList.contains('active')) {
+                content.style.maxHeight = content.scrollHeight + 'px';
+                const finalize = () => {
+                    content.style.maxHeight = 'none';
+                    content.removeEventListener('transitionend', finalize);
+                };
+                content.addEventListener('transitionend', finalize);
+            } else {
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null;
+                } else {
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                    requestAnimationFrame(() => {
+                        content.style.maxHeight = '0';
+                    });
+                }
+            }
+        };
     });
 }
