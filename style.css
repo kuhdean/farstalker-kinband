@@ -187,6 +187,33 @@ button:hover {
   flex-grow: 1;
   overflow-y: auto;
   padding-right: 5px;
+  max-height: 80vh;
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: var(--accent-color-primary) var(--card-section-bg);
+}
+
+/* Custom scrollbar for WebKit browsers */
+#roster-list-container::-webkit-scrollbar {
+  width: 10px;
+}
+#roster-list-container::-webkit-scrollbar-track {
+  background: var(--card-section-bg);
+}
+#roster-list-container::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    to bottom,
+    var(--accent-color-primary),
+    var(--accent-color-secondary)
+  );
+  border-radius: 5px;
+  border: 2px solid var(--card-section-bg);
+}
+#roster-list-container::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    to bottom,
+    var(--accent-color-primary),
+    var(--accent-color-tertiary)
+  );
 }
 
 /* --- ROSTER BUILDER --- */
