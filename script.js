@@ -577,10 +577,8 @@ function bindAccordions() {
             btn.classList.toggle('active');
             if (content.style.maxHeight) {
                 content.style.maxHeight = null;
-                content.classList.remove('open');
             } else {
                 content.style.maxHeight = content.scrollHeight + 'px';
-                content.classList.add('open');
             }
         };
     });
