@@ -26,16 +26,17 @@ const factionRules = [
 ];
 
 const strategicPloys = [
-    { name: 'Cut-Throats', cp: 1, text: "Until the end of the turning point, add 1 to the Attacks characteristic of friendly FARSTALKER KINBAND operatives’ melee weapons (to a maximum of 5)." },
-    { name: 'Prey', cp: 1, text: "Select one enemy operative. Until the end of the turning point, friendly operatives' ranged weapons have the Balanced and Severe rules against that target. If a weapon already has Balanced, it gains Ceaseless and Severe instead." },
+    { name: 'Cut-Throats', cp: 1, text: "Add 1 to the Atk stat of friendly FARSTALKER KINBAND operatives' melee weapons (to a maximum of 5)." },
+    { name: 'Rogue', cp: 1, text: "Whenever an operative is shooting a friendly FARSTALKER KINBAND operative: Ignore the Saturate weapon rule. If you can retain any cover saves, you can retain one additional cover save, or you can retain one cover save as a critical success instead. This isn't cumulative with improved cover saves from Vantage terrain." },
+    { name: 'Prey', cp: 1, text: "Whenever a friendly FARSTALKER KINBAND operative is shooting during an activation in which it hasn't performed the Charge, Fall Back or Reposition action, its ranged weapons have the Balanced and Severe weapon rules; if the weapon already has the Balanced weapon rule, it has the Ceaseless and Severe weapon rules instead. Note that operative isn't restricted from performing those actions after shooting." },
     { name: 'Bound', cp: 1, text: "During each friendly FARSTALKER KINBAND operative’s activation, you can ignore the first vertical distance of 2\" they move during one climb up." }
 ];
 
 const firefightPloys = [
-    { name: 'Savage Ambush', cp: 1, text: "Use during a Fight action when a ready friendly operative (with Light/Heavy terrain in its control range) is selected to fight against. In the Resolve Attack Dice step of that sequence, you resolve the first attack dice (i.e. defender instead of attacker)." },
-    { name: 'Slip Away', cp: 1, text: "Use during a friendly operative's activation, before or after it performs an action. That operative can perform the Fall Back action for 1 less AP." },
-    { name: 'Poach', cp: 1, text: "Use during a friendly operative's activation. Until the end of that activation, that operative only needs to contest a marker to perform Pick Up Marker or mission actions (instead of controlling it)." },
-    { name: 'Vengeance for the Kinband', cp: 1, text: "Use when a friendly operative is incapacitated. Select the enemy that did it. Until the end of the battle, friendly operatives gain the Relentless weapon rule when attacking that enemy. You cannot use this ploy again during the battle until that enemy operative is incapacitated." }
+    { name: 'Savage Ambush', cp: 1, text: "Use this firefight ploy during the Fight action when a ready friendly FARSTALKER KINBAND operative that has Light or Heavy terrain within its control range is selected to fight against. In the Resolve Attack Dice step of that sequence, you resolve the first attack dice (i.e. defender instead of attacker)." },
+    { name: 'Slip Away', cp: 1, text: "Use this firefight ploy during a friendly FARSTALKER KINBAND operative's activation, before or after it performs an action. During that activation, that operative can perform the Fall Back action for 1 less AP." },
+    { name: 'Poach', cp: 1, text: "Use this firefight ploy during a friendly FARSTALKER KINBAND operative's activation. Until the end of that activation, that operative doesn't have to control a marker to perform the Pick Up Marker or mission actions that usually require this (taking precedence over that action's conditions - it only needs to contest the marker)." },
+    { name: 'Vengeance for the Kinband', cp: 1, text: "Use this firefight ploy when a friendly FARSTALKER KINBAND operative is incapacitated by an enemy operative. Until the end of the battle, whenever another friendly FARSTALKER KINBAND operative is shooting against, fighting against or retaliating against that enemy operative, that other friendly operative's weapons have the Relentless weapon rule. You cannot use this ploy again during the battle until that enemy operative is incapacitated." }
 ];
 
 const factionEquipment = [
