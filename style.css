@@ -524,11 +524,18 @@ button:hover {
     border-radius: 2px;
     margin-top: 0;
 }
-.accordion:after { content: '\\02795'; font-size: 0.8em; color: var(--text-color-subtle); float: right; }
-.accordion.active:after { content: "\\2796"; }
+.accordion:after {
+    content: "\25BC"; /* ▼ down arrow */
+    font-size: 0.8em;
+    color: var(--text-color-subtle);
+    float: right;
+}
+.accordion.active:after {
+    content: "\25B2"; /* ▲ up arrow */
+}
 .accordion-content {
     background-color: var(--card-bg-main);
-    padding: 0 12px;
+    padding: 10px 12px;
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.3s ease-out;
@@ -753,20 +760,12 @@ button:hover {
     margin-bottom: 0;
 }
 .order-toggle.conceal {
-
     background-color: var(--accent-color-primary);
-    color: #000000;
+    color: #000;
 }
 .order-toggle.engage {
     background-color: var(--accent-color-secondary);
-
-    background-color: #333333;
-    color: #ffffff;
-}
-.order-toggle.engage {
-    background-color: var(--accent-color-primary);
-
-    color: #000000;
+    color: #000;
 }
 .order-toggle:hover, .activation-status:hover {
     background-color: var(--button-bg-hover);
@@ -872,17 +871,10 @@ button:hover {
     background-color: var(--text-color-secondary);
 }
 .operative-card.order-conceal {
-codex/update-database-and-readme-for-accuracy
     border-color: var(--accent-color-primary);
 }
 .operative-card.order-engage {
     border-color: var(--accent-color-secondary);
-
-    border-color: var(--accent-color-secondary);
-}
-.operative-card.order-engage {
-    border-color: var(--accent-color-primary);
-ui-redesign
 }
 #start-game-btn:disabled { background-color: #ccc; cursor: not-allowed; }
 
