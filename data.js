@@ -126,11 +126,72 @@ const universalEquipment = [
         ]
     },
     {
-        name: 'Climbing Gear',
+        name: 'Ammo Cache',
         epCost: 1,
-        flavorText: 'Essential for gaining a vertical advantage in dense terrain.',
+        flavorText: 'Whether stockpiles deliberately set out for warriors to access quickly, or the abandoned munitions of the slain, these caches can prove vital for a swift reload in the heat of battle.',
         rules: [
-            'This operative does not increase distance for climbing.'
+            'Before the battle, you can set up one of your Ammo Cache markers wholly within your territory.',
+            'Friendly operatives can perform the following mission action during the battle.'
+        ],
+        uniqueActions: [
+            {
+                name: 'AMMO RESUPPLY (0AP)',
+                text: 'One of your Ammo Cache markers the active operative controls is used during this turning point. Until the start of the next turning point, whenever this operative is shooting with a weapon from its datacard, you can re-roll one of your attack dice. An operative cannot perform this action while within control range of an enemy operative, if that marker isn’t yours, or if that marker has been used this turning point.'
+            }
+        ]
+    },
+    {
+        name: 'Razor Wire',
+        epCost: 1,
+        flavorText: 'Spooled rapidly out and affixed to jutting posts, razor wire acts as an easily deployed barrier and a painful deterrent to enemy operatives seeking to attack along particular routes.',
+        rules: [
+            'Razor wire is Exposed and Obstructing terrain. Before the battle, you can set it up wholly within your territory, on the killzone floor and more than 2" from other equipment terrain features, access points and Accessible terrain.',
+            'Obstructing: Whenever an operative would cross over this terrain feature within 1" of it, treat the distance as an additional 1".'
+        ]
+    },
+    {
+        name: 'Comms Device',
+        epCost: 1,
+        flavorText: 'Communications devices can be swiftly hijacked and employed to coordinate operations or call in support during a firefight.',
+        rules: [
+            'Before the battle, you can set up one of your Comms Device markers wholly within your territory. While a friendly operative controls this marker, add 3" to the distance requirements of its SUPPORT rules that refer to friendly operatives (e.g. \u2018select one friendly operative within 6"\u2019 would be 9" instead). Note that you cannot benefit from your opponent\u2019s Comms Device markers.'
+        ]
+    },
+    {
+        name: 'Mines',
+        epCost: 2,
+        flavorText: 'The battlefields of the 41st Millennium are plagued by myriad types of mine, from simple frag charges to monofilament web-snares and microplasma charges. Ultimately, all serve a similar, horrible purpose.',
+        rules: [
+            'Before the battle, you can set up one of your Mines markers wholly within your territory and more than 2" from other markers, access points and Accessible terrain. The first time that marker is within an operative\u2019s control range, remove that marker and inflict D3+3 damage on that operative.'
+        ]
+    },
+    {
+        name: 'Light Barricades',
+        epCost: 1,
+        flavorText: 'Designed to be lugged into place and then deployed by operatives and combat engineers, these barriers are proof against small arms fire.',
+        rules: [
+            'Light barricades are Light terrain, except the feet, which are Insignificant and Exposed. Before the battle, you can set up any of them wholly within your territory, on the killzone floor and more than 2" from other equipment terrain features, access points and Accessible terrain.'
+        ]
+    },
+    {
+        name: 'Heavy Barricade',
+        epCost: 2,
+        flavorText: 'A redoubtable slab of plasteel and adamantine, this layered protective barrier provides shelter amidst the fiercest firefights.',
+        rules: [
+            'A heavy barricade is Heavy terrain. Before the battle, you can set it up wholly within 4" of your drop zone, on the killzone floor and more than 2" from other equipment terrain features, access points and Accessible terrain.'
+        ]
+    },
+    {
+        name: 'Ladders',
+        epCost: 1,
+        flavorText: 'Carried into battle in their compacted forms, these ladders provide a rapid route of ingress to strongholds, or access to vital vantage points.',
+        rules: [
+            'Ladders are Exposed terrain. Before the battle, you can set up any of them as follows:',
+            'Wholly within your territory.',
+            'Upright against terrain that\u2019s at least 2" tall.',
+            'More than 2" from other equipment terrain features.',
+            'More than 1" from doors and access points.',
+            'In addition, an operative can either move through ladders as if they aren\u2019t there (but cannot finish on them), or climb them. Once per action, whenever an operative is climbing this terrain feature, treat the vertical distance as 1". Note that if an operative then continues climbing another terrain feature during that action (including another ladder), that distance is determined as normal.'
         ]
     }
 ];
