@@ -1,93 +1,100 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Kroot-Sheet: Dynamic Roster v2</title>
-    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Share+Tech+Mono&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Share+Tech+Mono&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
     <div id="roster-builder-view" class="crt-mode">
-        <header>
-            <div id="roster-meta-info">
-                <p id="roster-validation-message"></p>
-            </div>
-            <div class="header-actions">
-                <button id="start-game-btn" disabled>Start Game</button>
-                <button id="reset-roster-btn">Reset Roster</button>
-            </div>
-        </header>
-        <div class="view-container">
-            <div id="master-selection-grid-area">
-                <div class="selection-category">
-                    <h3>Available Operatives</h3>
-                    <div id="operative-selection-grid" class="selection-grid"></div>
-                </div>
-                <div class="selection-category">
-                    <h3>Available Equipment (EP: <span id="ep-spent-ui">0</span>/10, Items: <span id="equipment-selected-count">0</span>/4)</h3>
-                    <div id="equipment-selection-grid" class="selection-grid"></div>
-                </div>
-            </div>
-
-            <div id="your-roster-list">
-                <h2>ROSTER (<span id="roster-count">0</span>/12)</h2>
-                <div id="roster-list-container"></div>
-                <h3>Chosen Kill Team Equipment:</h3>
-                <ul id="chosen-kill-team-equipment-list"></ul>
-            </div>
+      <header>
+        <div id="roster-meta-info">
+          <p id="roster-validation-message"></p>
         </div>
+        <div class="header-actions">
+          <button id="start-game-btn" disabled>Start Game</button>
+          <button id="reset-roster-btn">Reset Roster</button>
+        </div>
+      </header>
+      <div class="view-container">
+        <div id="master-selection-grid-area">
+          <div class="selection-category">
+            <h3>Available Operatives</h3>
+            <div id="operative-selection-grid" class="selection-grid"></div>
+          </div>
+          <div class="selection-category">
+            <h3>
+              Available Equipment (EP: <span id="ep-spent-ui">0</span>/10,
+              Items: <span id="equipment-selected-count">0</span>/4)
+            </h3>
+            <div id="equipment-selection-grid" class="selection-grid"></div>
+          </div>
+        </div>
+
+        <div id="your-roster-list">
+          <h2>ROSTER (<span id="roster-count">0</span>/12)</h2>
+          <div id="roster-list-container"></div>
+          <h3>Chosen Kill Team Equipment:</h3>
+          <ul id="chosen-kill-team-equipment-list"></ul>
+        </div>
+      </div>
     </div>
 
-    <div id="game-tracker-view" style="display: none;">
-        <header id="game-state-dashboard">
-            <div class="control-widget">
-                <strong>Turning Point:</strong>
-                <div class="value-controls">
-                    <span id="turn-value" class="state-value">1</span>
-                </div>
-            </div>
-            <div class="control-widget">
-                <strong>Command Points:</strong>
-                <div class="value-controls">
-                    <button class="cp-mod" data-amount="-1">-</button>
-                    <span id="cp-value" class="state-value">2</span>
-                    <button class="cp-mod" data-amount="1">+</button>
-                    <span id="cp-message" class="cp-message"></span>
-                </div>
-            </div>
-            <div class="control-widget">
-                <strong>Victory Points:</strong>
-                <div class="value-controls">
-                    <button class="vp-mod" data-amount="-1">-</button>
-                    <span id="vp-value" class="state-value">0</span>
-                    <button class="vp-mod" data-amount="1">+</button>
-                </div>
-            </div>
-            <button id="ready-all-btn">Ready All & Next Turn</button>
-        </header>
-        <div id="game-tracker-main-content-grid">
-            <div id="chosen-equipment-display-area" class="grid-item">
-                <button class="accordion">Selected Kill Team Equipment</button>
-                <div class="accordion-content">
-                    <div id="chosen-equipment-card-container"></div>
-                </div>
-            </div>
-            <div id="faction-rules-accordion-container" class="grid-item"></div>
-            <div id="strategic-ploys-accordion-container" class="grid-item"></div>
-            <div id="firefight-ploys-accordion-container" class="grid-item"></div>
+    <div id="game-tracker-view" style="display: none">
+      <header id="game-state-dashboard">
+        <div class="control-widget">
+          <strong>Turning Point:</strong>
+          <div class="value-controls">
+            <span id="turn-value" class="state-value">1</span>
+          </div>
         </div>
+        <div class="control-widget">
+          <strong>Command Points:</strong>
+          <div class="value-controls">
+            <button class="cp-mod" data-amount="-1">-</button>
+            <span id="cp-value" class="state-value">2</span>
+            <button class="cp-mod" data-amount="1">+</button>
+            <span id="cp-message" class="cp-message"></span>
+          </div>
+        </div>
+        <div class="control-widget">
+          <strong>Victory Points:</strong>
+          <div class="value-controls">
+            <button class="vp-mod" data-amount="-1">-</button>
+            <span id="vp-value" class="state-value">0</span>
+            <button class="vp-mod" data-amount="1">+</button>
+          </div>
+        </div>
+        <button id="ready-all-btn">Ready All & Next Turn</button>
+      </header>
+      <div id="game-tracker-main-content-grid">
+        <div id="chosen-equipment-display-area" class="grid-item">
+          <button class="accordion">Selected Kill Team Equipment</button>
+          <div class="accordion-content">
+            <div id="chosen-equipment-card-container"></div>
+          </div>
+        </div>
+        <div id="faction-rules-accordion-container" class="grid-item"></div>
+        <div id="strategic-ploys-accordion-container" class="grid-item"></div>
+        <div id="firefight-ploys-accordion-container" class="grid-item"></div>
+      </div>
 
-        <div id="active-operative-cards">
-            <!-- Operative cards will be generated here by JS -->
-        </div>
+      <div id="active-operative-cards">
+        <!-- Operative cards will be generated here by JS -->
+      </div>
     </div>
-
 
     <script src="data.js"></script>
     <script src="script.js"></script>
-</body>
+  </body>
 </html>
