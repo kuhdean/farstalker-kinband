@@ -283,6 +283,23 @@ function renderRosterList() {
       rosterListContainer.appendChild(item);
     });
   }
+  activeRoster.forEach((op) => {
+    const item = document.createElement("div");
+    item.classList.add("roster-item");
+    item.innerHTML = `
+            <div>
+                <span>${op.name}</span>
+            </div>
+            <div>
+                <button class="remove-op-btn" data-id="${op.instanceId}">X</button>
+            </div>`;
+    item
+      .querySelector(".remove-op-btn")
+      .addEventListener("click", () =>
+        removeOperativeFromRoster(op.instanceId),
+      );
+  rosterListContainer.appendChild(item);
+  });
   rosterCountSpan.textContent = activeRoster.length;
 }
 

@@ -198,6 +198,7 @@ button:hover {
   overflow-y: auto;
   padding-right: 5px;
   min-height: 0;
+  max-height: 80vh;
   scrollbar-width: thin; /* Firefox */
   scrollbar-color: var(--accent-color-primary) var(--card-section-bg);
 }
@@ -224,6 +225,15 @@ button:hover {
     var(--accent-color-primary),
     var(--accent-color-tertiary)
   );
+  width: 8px;
+}
+#roster-list-container::-webkit-scrollbar-track {
+  background: var(--card-bg-main);
+}
+#roster-list-container::-webkit-scrollbar-thumb {
+  background-color: var(--accent-color-primary);
+  border-radius: 4px;
+  border: 2px solid var(--card-bg-main);
 }
 
 /* --- ROSTER BUILDER --- */
