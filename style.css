@@ -124,8 +124,39 @@ button:hover {
 
 /* --- ROSTER BUILDER --- */
 #roster-meta-info p { margin: 2px 0; }
-#roster-validation-message.error { color: var(--error-text-color); background-color: var(--error-message-color); padding: 5px; border-radius: 3px;}
+#roster-validation-message.error { color: var(--error-text-color); background-color: var(--error-message-color); padding: 5px; border-radius: 3px; }
 #roster-validation-message.valid { color: var(--valid-message-color); }
+
+/* Cogitator inspired styling */
+#roster-builder-view.crt-mode {
+    font-family: 'Share Tech Mono', monospace;
+    color: #8aff80;
+    position: relative;
+}
+#roster-builder-view.crt-mode::after {
+    content: '';
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(255,255,255,0.05),
+        rgba(255,255,255,0.05) 1px,
+        transparent 1px,
+        transparent 2px
+    );
+    opacity: 0.05;
+}
+#roster-builder-view.crt-mode header {
+    border-color: #8aff80;
+    color: #8aff80;
+}
+#roster-builder-view.crt-mode h2,
+#roster-builder-view.crt-mode h3,
+#roster-builder-view.crt-mode button {
+    font-family: 'Share Tech Mono', monospace;
+}
 
 .operative-pool-button {
     display: block;
@@ -886,7 +917,12 @@ button:hover {
 .operative-card.order-engage {
     border-color: var(--accent-color-secondary);
 }
-#start-game-btn:disabled { background-color: #ccc; cursor: not-allowed; }
+#start-game-btn:disabled {
+    background-color: #333;
+    color: #666;
+    border-color: var(--card-border-color);
+    cursor: not-allowed;
+}
 
 /* --- KEYWORD & TOOLTIP STYLES --- */
 .keyword {

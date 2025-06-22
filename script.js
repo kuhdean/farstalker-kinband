@@ -149,6 +149,7 @@ function removeKillTeamEquipment(name) {
 }
 
 function showValidationMessage(message, isValid) {
+    if (!validationMessage) return;
     validationMessage.textContent = message;
     if (isValid) {
         validationMessage.classList.remove('error');
