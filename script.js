@@ -187,6 +187,7 @@ function updateEquipmentUI() {
   renderEquipmentSelectionGrid();
   renderChosenEquipmentCards(false); // We are in the roster builder, not the game.
   syncRosterHeight();
+
 }
 
 function addKillTeamEquipment(name) {
